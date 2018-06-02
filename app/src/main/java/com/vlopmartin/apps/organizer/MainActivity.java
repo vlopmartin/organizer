@@ -1,6 +1,7 @@
 package com.vlopmartin.apps.organizer;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                System.out.println("Width: " + String.valueOf(findViewById(R.id.contentLayout).getWidth()));
             }
         });
 
@@ -56,9 +58,6 @@ public class MainActivity extends AppCompatActivity
         testList.add("Item n 2");
         MainListAdapter mainListAdapter = new MainListAdapter(testList);
         mainListView.setAdapter(mainListAdapter);
-
-        System.out.println("Number of items: " + String.valueOf(mainListAdapter.getItemCount()));
-
     }
 
     @Override

@@ -34,14 +34,15 @@ public class MainListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item, null);
+        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item, parent, false);
         ViewHolder holder = new ViewHolder(item);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((ViewHolder)holder).setText(dataList.get(position));
+        ViewHolder viewHolder = (ViewHolder)holder;
+        viewHolder.setText(dataList.get(position));
     }
 
     @Override
