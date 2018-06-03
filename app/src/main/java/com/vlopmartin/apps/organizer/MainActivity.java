@@ -1,13 +1,10 @@
 package com.vlopmartin.apps.organizer;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +49,11 @@ public class MainActivity extends AppCompatActivity
 
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
-        List<String> testList = new ArrayList<String>();
-        testList.add("Item n 1");
-        testList.add("Item n 2");
-        MainListAdapter mainListAdapter = new MainListAdapter(testList);
-        mainListView.setAdapter(mainListAdapter);
+        List<Task> testList = new ArrayList<Task>();
+        testList.add(new Task("Task 1", "Description 1"));
+        testList.add(new Task("Task 2", "Description 2"));
+        TaskListAdapter taskListAdapter = new TaskListAdapter(testList);
+        mainListView.setAdapter(taskListAdapter);
     }
 
     @Override
