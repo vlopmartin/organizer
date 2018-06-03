@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         List<Task> testList = new ArrayList<Task>();
         testList.add(new Task("Task 1", "Description 1"));
         testList.add(new Task("Task 2", "Description 2"));
+        testList.add(new Task("Task 3", "Description 3"));
         TaskListAdapter taskListAdapter = new TaskListAdapter(testList);
         mainListView.setAdapter(taskListAdapter);
     }
