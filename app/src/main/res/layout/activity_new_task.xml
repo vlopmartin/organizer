@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".NewTaskActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,12 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        android:id="@+id/content"
-        layout="@layout/content_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <include layout="@layout/content_new_task" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -33,9 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@android:color/background_light"
-        app:backgroundTint="@android:color/holo_red_light"
-        app:fabSize="auto"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>

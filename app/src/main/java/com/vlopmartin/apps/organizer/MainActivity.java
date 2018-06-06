@@ -2,6 +2,7 @@ package com.vlopmartin.apps.organizer;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,16 +36,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                System.out.println("Width: " + String.valueOf(findViewById(R.id.contentLayout).getWidth()));
-            }
-        });
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -56,10 +47,21 @@ public class MainActivity extends AppCompatActivity
 
         // Custom code starts here
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
 
-        String filename = "tasks";
+        /*String filename = "tasks";
         //File tasksFile = new File(this.getFilesDir(), "tasks");
 
         try {
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mainListView, "Error: Could not create file for the tasks list!", Snackbar.LENGTH_LONG).show();
                 System.err.println(ioe.getMessage());
             }
-        }
+        }*/
 
         List<Task> testList = new ArrayList<Task>();
         testList.add(new Task("Task 1", "Description 1"));
