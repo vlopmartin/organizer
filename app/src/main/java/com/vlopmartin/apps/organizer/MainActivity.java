@@ -1,5 +1,6 @@
 package com.vlopmartin.apps.organizer;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public List<Task> taskList;
+    public TaskListAdapter taskListAdapter;
+
+    private static final int NEW_TASK_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +58,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                MainActivity.this.startActivity(intent);
+                //MainActivity.this.startActivity(intent);
+                MainActivity.this.startActivityForResult(intent, NEW_TASK_REQUEST);
             }
         });
 
@@ -75,13 +82,34 @@ public class MainActivity extends AppCompatActivity
             }
         }*/
 
-        List<Task> testList = new ArrayList<Task>();
-        testList.add(new Task("Task 1", "Description 1"));
-        testList.add(new Task("Task 2", "Description 2"));
-        testList.add(new Task("Task 3", "Description 3"));
-        TaskListAdapter taskListAdapter = new TaskListAdapter(testList);
+        taskList = new ArrayList<Task>();
+        taskList.add(new Task("Task 1", "Description 1"));
+        taskList.add(new Task("Task 2", "Description 2"));
+        taskList.add(new Task("Task 3", "Description 3"));
+        taskListAdapter = new TaskListAdapter(taskList);
         mainListView.setAdapter(taskListAdapter);
 
+    }
+
+    public void addTask(Task newTask, int index) {
+        taskList.add(index, newTask);
+        taskListAdapter.notifyItemInserted(index);
+    }
+
+    public void addTask(Task newTask) {
+        addTask(newTask, taskList.size());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NEW_TASK_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                String taskName = data.getStringExtra(NewTaskActivity.TASK_NAME);
+                String taskDescription = data.getStringExtra(NewTaskActivity.TASK_DESCRIPTION);
+                Task newTask = new Task(taskName, taskDescription);
+                this.addTask(newTask);
+            }
+        }
     }
 
     @Override

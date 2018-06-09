@@ -23,7 +23,8 @@
             android:name=".NewTaskActivity"
             android:label="@string/title_activity_new_task"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.vlopmartin.apps.organizer.MainActivity" />
