@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
 
     public List<Task> taskList;
     public TaskListAdapter taskListAdapter;
+    private FileManager fileManager;
 
     private static final int NEW_TASK_REQUEST = 1;
 
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity
 
         // Custom code starts here
 
+        fileManager = new FileManager(getApplication());
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,34 +69,32 @@ public class MainActivity extends AppCompatActivity
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
 
-        /*String filename = "tasks";
-        //File tasksFile = new File(this.getFilesDir(), "tasks");
-
         try {
-            FileInputStream fis = openFileInput(filename);
-        } catch (FileNotFoundException fnfe) {
-            // If we could not find the file, try creating it
-            try {
-                new File(getFilesDir(), filename).createNewFile();
-                Snackbar.make(mainListView, "Tasks list file was not found. Creating file...", Snackbar.LENGTH_LONG).show();
-            } catch (IOException ioe) {
-                Snackbar.make(mainListView, "Error: Could not create file for the tasks list!", Snackbar.LENGTH_LONG).show();
-                System.err.println(ioe.getMessage());
-            }
-        }*/
+            taskList = fileManager.getTaskList();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO: Snackbar when we couldn't load the task list?
+        }
 
-        taskList = new ArrayList<Task>();
+        /*taskList = new ArrayList<Task>();
         taskList.add(new Task("Task 1", "Description 1"));
         taskList.add(new Task("Task 2", "Description 2"));
-        taskList.add(new Task("Task 3", "Description 3"));
+        taskList.add(new Task("Task 3", "Description 3"));*/
+
         taskListAdapter = new TaskListAdapter(taskList);
         mainListView.setAdapter(taskListAdapter);
 
     }
 
     public void addTask(Task newTask, int index) {
-        taskList.add(index, newTask);
-        taskListAdapter.notifyItemInserted(index);
+        try {
+            fileManager.saveTask(newTask);
+            taskList.add(index, newTask);
+            taskListAdapter.notifyItemInserted(index);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO: Snackbar when we couldn't save the task?
+        }
     }
 
     public void addTask(Task newTask) {

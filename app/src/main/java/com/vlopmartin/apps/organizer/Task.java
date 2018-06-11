@@ -14,7 +14,7 @@ public class Task implements Serializable {
 
     public static final String tasksDirName = "tasks";
 
-    //private int id;
+    private int id;
     private String name;
     private String description;
 
@@ -38,7 +38,14 @@ public class Task implements Serializable {
     public Task(String name, String description) {
         setName(name);
         setDescription(description);
-        //id = 1;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
