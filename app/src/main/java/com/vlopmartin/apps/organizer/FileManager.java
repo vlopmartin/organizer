@@ -100,4 +100,21 @@ public class FileManager {
         return taskList;
     }
 
+    public Task getTaskById(int id) throws IOException {
+        Task task;
+        File file = new File(tasksDir, String.valueOf(id));
+        FileInputStream fis = new FileInputStream(file);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        try {
+            task = (Task) ois.readObject();
+        } catch (ClassNotFoundException e) {
+            task = null;
+            e.printStackTrace();
+            // TODO: Should we control the case where the object is of an unknown class?
+        }
+        ois.close();
+        fis.close();
+        return task;
+    }
+
 }

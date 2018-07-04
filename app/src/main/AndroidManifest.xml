@@ -29,6 +29,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.vlopmartin.apps.organizer.MainActivity" />
         </activity>
+        <activity android:name=".TaskDetailsActivity"></activity>
     </application>
 
 </manifest>

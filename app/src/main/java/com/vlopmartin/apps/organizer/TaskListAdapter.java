@@ -1,5 +1,7 @@
 package com.vlopmartin.apps.organizer;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,9 +56,20 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         TaskViewHolder taskViewHolder = (TaskViewHolder)holder;
-        Task task = taskList.get(position);
+        final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
+
+        // On clicking the list item, open an activity with the task details
+        taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, TaskDetailsActivity.class);
+                intent.putExtra(TaskDetailsActivity.KEY_TASK_ID, task.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
