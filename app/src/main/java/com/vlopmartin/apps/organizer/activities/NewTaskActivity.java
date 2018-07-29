@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.vlopmartin.apps.organizer.R;
+import com.vlopmartin.apps.organizer.Task;
 
 public class NewTaskActivity extends AppCompatActivity {
 
@@ -35,10 +36,10 @@ public class NewTaskActivity extends AppCompatActivity {
                 String taskName = taskNameView.getText().toString();
                 String taskDescription = taskDescriptionView.getText().toString();
 
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra(TASK_NAME, taskName);
-                returnIntent.putExtra(TASK_DESCRIPTION, taskDescription);
-                NewTaskActivity.this.setResult(Activity.RESULT_OK, returnIntent);
+                Task task = new Task(0, taskName, taskDescription);
+                task.save(NewTaskActivity.this.getApplicationContext());
+
+                NewTaskActivity.this.setResult(Activity.RESULT_OK);
                 NewTaskActivity.this.finish();
             }
         });

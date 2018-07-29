@@ -1,5 +1,6 @@
 package com.vlopmartin.apps.organizer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vlopmartin.apps.organizer.activities.MainActivity;
 import com.vlopmartin.apps.organizer.activities.TaskDetailsActivity;
 
 import java.util.List;

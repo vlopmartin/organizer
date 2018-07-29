@@ -10,4 +10,5 @@
     <string name="task_name_hint">Name</string>
     <string name="task_description_hint">Description</string>
     <string name="save_button">Save</string>
+    <string name="delete_button">Delete</string>
 </resources>

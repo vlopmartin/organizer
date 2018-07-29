@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity
     public List<Task> taskList;
     public TaskListAdapter taskListAdapter;
 
-    private static final int NEW_TASK_REQUEST = 1;
+    //public static final int NEW_TASK_REQUEST = 1;
+    //public static final int TASK_DETAILS_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                //MainActivity.this.startActivity(intent);
-                MainActivity.this.startActivityForResult(intent, NEW_TASK_REQUEST);
+                MainActivity.this.startActivity(intent);
+                //MainActivity.this.startActivityForResult(intent, NEW_TASK_REQUEST);
             }
         });
 
@@ -73,26 +74,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void addTask(Task newTask, int index) {
-        newTask.save(this.getApplicationContext());
-        taskList.add(index, newTask);
-        taskListAdapter.notifyItemInserted(index);
-    }
-
-    public void addTask(Task newTask) {
-        addTask(newTask, taskList.size());
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NEW_TASK_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                String taskName = data.getStringExtra(NewTaskActivity.TASK_NAME);
-                String taskDescription = data.getStringExtra(NewTaskActivity.TASK_DESCRIPTION);
-                Task newTask = new Task(0, taskName, taskDescription);
-                this.addTask(newTask);
-            }
-        }
+    protected void onResume() {
+        super.onResume();
+        taskList = Task.getList(this.getApplicationContext());
+        taskListAdapter.setTaskList(taskList);
+        taskListAdapter.notifyDataSetChanged();
     }
 
     @Override
