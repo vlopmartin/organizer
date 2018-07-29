@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,17 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Intent intent = new Intent(context, TaskDetailsActivity.class);
                 intent.putExtra(TaskDetailsActivity.TASK_ID, task.getId());
                 context.startActivity(intent);
+            }
+        });
+
+        // On clicking the check mark, delete the task
+        taskViewHolder.itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = taskList.indexOf(task);
+                taskList.remove(index);
+                task.delete(v.getContext());
+                TaskListAdapter.this.notifyItemRemoved(index);
             }
         });
     }
