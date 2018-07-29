@@ -80,10 +80,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         taskViewHolder.itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = taskList.indexOf(task);
+                final int index = taskList.indexOf(task);
                 taskList.remove(index);
                 task.delete(v.getContext());
                 TaskListAdapter.this.notifyItemRemoved(index);
+                Snackbar.make(v, R.string.task_completed, Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        taskList.add(index, task);
+                        task.save(v.getContext());
+                        TaskListAdapter.this.notifyItemInserted(index);
+                    }
+                }).show();
             }
         });
     }
