@@ -18,7 +18,7 @@ public class Task {
     private String name;
     private String description;
 
-    public static List<Task> getTaskList(Context ctx) {
+    public static List<Task> getList(Context ctx) {
         List<Task> ret = new ArrayList<Task>();
 
         SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
@@ -32,6 +32,24 @@ public class Task {
             taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             ret.add(new Task(taskId, taskName, taskDescription));
+        }
+
+        return ret;
+    }
+
+    public static Task getById(Context ctx, long id) {
+        Task ret;
+
+        SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
+        Cursor cursor = db.query("TASKS", null, "id = ?", new String[] {String.valueOf(id)}, null, null, null);
+
+        if (cursor.moveToNext()) {
+            long taskId = cursor.getInt(cursor.getColumnIndex("ID"));
+            String taskName = cursor.getString(cursor.getColumnIndex("NAME"));
+            String taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
+            ret = new Task(taskId, taskName, taskDescription);
+        } else {
+            ret = null;
         }
 
         return ret;

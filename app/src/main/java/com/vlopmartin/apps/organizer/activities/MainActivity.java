@@ -20,7 +20,6 @@ import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 import com.vlopmartin.apps.organizer.TaskListAdapter;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
 
-        taskList = Task.getTaskList(this.getApplicationContext());
+        taskList = Task.getList(this.getApplicationContext());
 
         /*taskList = new ArrayList<Task>();
         taskList.add(new Task("Task 1", "Description 1"));

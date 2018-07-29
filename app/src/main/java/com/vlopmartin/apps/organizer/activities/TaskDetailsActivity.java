@@ -1,8 +1,11 @@
-package com.vlopmartin.apps.organizer;
+package com.vlopmartin.apps.organizer.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.vlopmartin.apps.organizer.R;
+import com.vlopmartin.apps.organizer.Task;
 
 import java.io.IOException;
 
@@ -18,8 +21,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_details);
 
         // Get the task
-        int taskId = getIntent().getIntExtra(TASK_ID, 0);
-        //task = fileManager.getTaskById(taskId);
+        long taskId = getIntent().getLongExtra(TASK_ID, 0);
+        task = Task.getById(this.getApplicationContext(), taskId);
 
         // Bind the task data
         TextView taskNameView = findViewById(R.id.task_name);
