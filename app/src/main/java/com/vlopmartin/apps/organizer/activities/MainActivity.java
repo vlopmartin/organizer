@@ -1,12 +1,9 @@
-package com.vlopmartin.apps.organizer;
+package com.vlopmartin.apps.organizer.activities;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,12 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import com.vlopmartin.apps.organizer.R;
+import com.vlopmartin.apps.organizer.Task;
+import com.vlopmartin.apps.organizer.TaskListAdapter;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -32,7 +28,6 @@ public class MainActivity extends AppCompatActivity
 
     public List<Task> taskList;
     public TaskListAdapter taskListAdapter;
-    private FileManager fileManager;
 
     private static final int NEW_TASK_REQUEST = 1;
 
@@ -54,8 +49,6 @@ public class MainActivity extends AppCompatActivity
 
         // Custom code starts here
 
-        fileManager = new FileManager(getApplication());
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +62,7 @@ public class MainActivity extends AppCompatActivity
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
 
-        try {
-            taskList = fileManager.getTaskList();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO: Snackbar when we couldn't load the task list?
-        }
+        taskList = Task.getTaskList(this.getApplicationContext());
 
         /*taskList = new ArrayList<Task>();
         taskList.add(new Task("Task 1", "Description 1"));
@@ -87,14 +75,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addTask(Task newTask, int index) {
-        try {
-            fileManager.saveTask(newTask);
-            taskList.add(index, newTask);
-            taskListAdapter.notifyItemInserted(index);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO: Snackbar when we couldn't save the task?
-        }
+        newTask.save(this.getApplicationContext());
+        taskList.add(index, newTask);
+        taskListAdapter.notifyItemInserted(index);
     }
 
     public void addTask(Task newTask) {
@@ -107,7 +90,7 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 String taskName = data.getStringExtra(NewTaskActivity.TASK_NAME);
                 String taskDescription = data.getStringExtra(NewTaskActivity.TASK_DESCRIPTION);
-                Task newTask = new Task(taskName, taskDescription);
+                Task newTask = new Task(0, taskName, taskDescription);
                 this.addTask(newTask);
             }
         }

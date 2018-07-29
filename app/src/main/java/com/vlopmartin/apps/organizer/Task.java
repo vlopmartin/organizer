@@ -2,49 +2,72 @@ package com.vlopmartin.apps.organizer;
 
 import android.app.Application;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Task implements Serializable {
+public class Task {
 
-    public static final String tasksDirName = "tasks";
+    public static final String createTableSQL = "CREATE TABLE TASKS (ID INTEGER PRIMARY KEY, NAME TEXT, DESCRIPTION TEXT)";
 
-    private int id;
+    private long id;
     private String name;
     private String description;
 
-    public static List<Task> readTasks(File filesDir) throws IOException, ClassNotFoundException {
+    public static List<Task> getTaskList(Context ctx) {
         List<Task> ret = new ArrayList<Task>();
 
-        File tasksDir = new File(filesDir, tasksDirName);
-        for (File file : tasksDir.listFiles()) {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Task task = (Task) ois.readObject();
-            ois.close();
-            fis.close();
+        SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
+        Cursor cursor = db.query("TASKS", null, null, null, null, null, null);
 
-            ret.add(task);
+        long taskId;
+        String taskName;
+        String taskDescription;
+        while (cursor.moveToNext()) {
+            taskId = cursor.getInt(cursor.getColumnIndex("ID"));
+            taskName = cursor.getString(cursor.getColumnIndex("NAME"));
+            taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
+            ret.add(new Task(taskId, taskName, taskDescription));
         }
 
         return ret;
     }
 
-    public Task(String name, String description) {
+    public void save(Context ctx) {
+        SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("NAME", this.name);
+        values.put("DESCRIPTION", this.description);
+
+        if (this.id == 0) {
+            this.id = db.insert("TASKS", null, values);
+        } else {
+            db.update("TASKS", values, "ID = ?", new String[] {String.valueOf(this.id)});
+        }
+    }
+
+    public void delete(Context ctx) {
+        SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
+
+        db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
+    }
+
+    public Task(long id, String name, String description) {
+        setId(id);
         setName(name);
         setDescription(description);
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
