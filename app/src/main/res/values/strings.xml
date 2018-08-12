@@ -13,4 +13,5 @@
     <string name="delete_button">Delete</string>
     <string name="task_completed">Task completed</string>
     <string name="undo">Undo</string>
+    <string name="due_date_label">Due date</string>
 </resources>

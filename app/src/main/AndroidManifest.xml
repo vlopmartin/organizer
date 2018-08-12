@@ -29,7 +29,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.vlopmartin.apps.organizer.activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.TaskDetailsActivity"></activity>
+        <activity android:name=".activities.TaskDetailsActivity" />
+        <activity android:name=".activities.DatePickerActivity"></activity>
     </application>
 
 </manifest>
