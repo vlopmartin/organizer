@@ -35,7 +35,7 @@ public class Task {
             taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            ret.add(new Task(taskId, taskName, taskDescription, new Date(taskDueDate)));
+            ret.add(new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate)));
         }
 
         return ret;
@@ -57,6 +57,7 @@ public class Task {
             ret = null;
         }
 
+        cursor.close();
         return ret;
     }
 
@@ -66,7 +67,7 @@ public class Task {
         ContentValues values = new ContentValues();
         values.put("NAME", this.name);
         values.put("DESCRIPTION", this.description);
-        values.put("DUE_DATE", this.dueDate != null ? this.dueDate.getTime() : null);
+        values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getTime());
 
         if (this.id == 0) {
             this.id = db.insert("TASKS", null, values);

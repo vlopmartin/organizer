@@ -55,7 +55,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 String taskName = taskNameView.getText().toString();
                 String taskDescription = taskDescriptionView.getText().toString();
 
-                Task task = new Task(0, taskName, taskDescription, null);
+                Task task = new Task(0, taskName, taskDescription, dueDate);
                 task.save(NewTaskActivity.this.getApplicationContext());
 
                 NewTaskActivity.this.setResult(Activity.RESULT_OK);

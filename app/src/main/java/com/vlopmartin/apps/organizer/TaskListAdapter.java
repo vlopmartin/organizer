@@ -14,13 +14,19 @@ import android.widget.TextView;
 import com.vlopmartin.apps.organizer.activities.MainActivity;
 import com.vlopmartin.apps.organizer.activities.TaskDetailsActivity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Task> taskList;
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
+
+        private static final DateFormat dateFormat = new SimpleDateFormat("dd MMM");
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -34,6 +40,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void setTaskDescription(String taskDescription) {
             TextView textView = this.itemView.findViewById(R.id.task_description);
             textView.setText(taskDescription);
+        }
+
+        public void setTaskDueDate(Date taskDueDate) {
+            TextView textView = this.itemView.findViewById(R.id.task_due_date);
+            if (taskDueDate != null) {
+                textView.setText(dateFormat.format(taskDueDate));
+            } else {
+                textView.setText("");
+            }
         }
 
     }
@@ -64,6 +79,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
+        taskViewHolder.setTaskDueDate(task.getDueDate());
 
         // On clicking the list item, open an activity with the task details
         taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
