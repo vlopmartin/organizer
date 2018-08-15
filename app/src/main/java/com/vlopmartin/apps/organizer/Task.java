@@ -52,7 +52,7 @@ public class Task {
             String taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             String taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             long taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            ret = new Task(taskId, taskName, taskDescription, new Date(taskDueDate));
+            ret = new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate));
         } else {
             ret = null;
         }
@@ -65,11 +65,15 @@ public class Task {
         SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        if (this.id != 0) {
+            values.put("ID", this.id);
+        }
         values.put("NAME", this.name);
         values.put("DESCRIPTION", this.description);
         values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getTime());
 
-        this.id = db.replace("TASKS", null, values);
+        long id = db.replace("TASKS", null, values);
+        this.id = id;
     }
 
     public void delete(Context ctx) {

@@ -27,12 +27,14 @@ public class NewTaskActivity extends AppCompatActivity {
 
     public static final int DUE_DATE_REQUEST = 1;
 
-    private static final DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+    protected static final DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
-    private EditText taskNameView;
-    private EditText taskDescriptionView;
-    private TextView dueDateView;
-    private Date dueDate;
+    protected EditText taskNameView;
+    protected EditText taskDescriptionView;
+    protected TextView dueDateView;
+    protected Button saveButton;
+
+    protected Date dueDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class NewTaskActivity extends AppCompatActivity {
         taskDescriptionView = findViewById(R.id.task_description);
         dueDateView = findViewById(R.id.due_date);
 
-        Button saveButton = findViewById(R.id.save_button);
+        saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +78,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 int day = data.getIntExtra(DatePickerActivity.DAY, 0);
                 int month = data.getIntExtra(DatePickerActivity.MONTH, 0);
                 int year = data.getIntExtra(DatePickerActivity.YEAR, 0);
-                Calendar calendar = new GregorianCalendar(year, month - 1, day); // Apparently months go from 0 to 11 in Calendar?
+                Calendar calendar = new GregorianCalendar(year, month, day); // Apparently months go from 0 to 11 in Calendar?
                 dueDate = calendar.getTime();
                 dueDateView.setText(dateFormat.format(dueDate));
             }
