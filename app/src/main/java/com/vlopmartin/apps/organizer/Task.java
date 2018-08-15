@@ -13,12 +13,14 @@ import java.util.List;
 
 public class Task {
 
-    public static final String createTableSQL = "CREATE TABLE TASKS (ID INTEGER PRIMARY KEY, NAME TEXT, DESCRIPTION TEXT, DUE_DATE INTEGER)";
+    public static final String createTableSQL = "CREATE TABLE TASKS (ID INTEGER PRIMARY KEY, NAME TEXT, DESCRIPTION TEXT, DUE_DATE INTEGER, PRIORITY INTEGER)";
 
     private long id;
     private String name;
     private String description;
     private Date dueDate;
+    private long priority;
+
 
     public static List<Task> getList(Context ctx) {
         List<Task> ret = new ArrayList<Task>();
@@ -30,14 +32,17 @@ public class Task {
         String taskName;
         String taskDescription;
         long taskDueDate;
+        long taskPriority;
         while (cursor.moveToNext()) {
             taskId = cursor.getLong(cursor.getColumnIndex("ID"));
             taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            ret.add(new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate)));
+            taskPriority = cursor.getLong(cursor.getColumnIndex("PRIORITY"));
+            ret.add(new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate), taskPriority));
         }
 
+        cursor.close();
         return ret;
     }
 
@@ -52,7 +57,8 @@ public class Task {
             String taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             String taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             long taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            ret = new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate));
+            long taskPriority = cursor.getLong(cursor.getColumnIndex("PRIORITY"));
+            ret = new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate), taskPriority);
         } else {
             ret = null;
         }
@@ -71,6 +77,7 @@ public class Task {
         values.put("NAME", this.name);
         values.put("DESCRIPTION", this.description);
         values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getTime());
+        values.put("PRIORITY", this.priority);
 
         long id = db.replace("TASKS", null, values);
         this.id = id;
@@ -82,11 +89,12 @@ public class Task {
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
     }
 
-    public Task(long id, String name, String description, Date dueDate) {
+    public Task(long id, String name, String description, Date dueDate, long priority) {
         setId(id);
         setName(name);
         setDescription(description);
         setDueDate(dueDate);
+        setPriority(priority);
     }
 
     public long getId() {
@@ -121,4 +129,7 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public long getPriority() { return priority; }
+
+    public void setPriority(long priority) { this.priority = priority; }
 }
