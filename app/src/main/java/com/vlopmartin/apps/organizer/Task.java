@@ -69,11 +69,7 @@ public class Task {
         values.put("DESCRIPTION", this.description);
         values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getTime());
 
-        if (this.id == 0) {
-            this.id = db.insert("TASKS", null, values);
-        } else {
-            db.update("TASKS", values, "ID = ?", new String[] {String.valueOf(this.id)});
-        }
+        this.id = db.replace("TASKS", null, values);
     }
 
     public void delete(Context ctx) {
