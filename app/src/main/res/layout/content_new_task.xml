@@ -30,7 +30,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/task_description_hint"
-        android:inputType="textCapSentences"
+        android:inputType="textCapSentences|textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/task_name" />
 
