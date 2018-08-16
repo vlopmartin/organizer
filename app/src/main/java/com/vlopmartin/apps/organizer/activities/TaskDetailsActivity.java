@@ -28,6 +28,15 @@ public class TaskDetailsActivity extends NewTaskActivity {
         if (dueDate != null) {
             dueDateView.setText(dateFormat.format(dueDate));
         }
+        int[] priorityValues = getResources().getIntArray(R.array.priority_values);
+        int priorityIndex = 0;
+        long taskPriority = task.getPriority();
+        for (int i=0; i<priorityValues.length; i++) {
+            if (priorityValues[i] == taskPriority) {
+                priorityIndex = i;
+            }
+        }
+        priorityView.setSelection(priorityIndex);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +44,8 @@ public class TaskDetailsActivity extends NewTaskActivity {
                 task.setName(taskNameView.getText().toString());
                 task.setDescription(taskDescriptionView.getText().toString());
                 task.setDueDate(dueDate);
+                int taskPriority = getResources().getIntArray(R.array.priority_values)[priorityView.getSelectedItemPosition()];
+                task.setPriority(taskPriority);
                 task.save(TaskDetailsActivity.this.getApplicationContext());
 
                 TaskDetailsActivity.this.setResult(Activity.RESULT_OK);

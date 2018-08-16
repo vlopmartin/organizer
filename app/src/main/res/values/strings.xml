@@ -16,4 +16,10 @@
     <string name="undo">Undo</string>
     <string name="due_date_label">Due date</string>
     <string name="task_due_date_hint">Due date</string>
+    <string-array name="priorities">
+        <item>(None)</item>
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
 </resources>

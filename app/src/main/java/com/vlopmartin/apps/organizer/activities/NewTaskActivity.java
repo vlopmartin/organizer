@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.vlopmartin.apps.organizer.R;
@@ -32,6 +33,7 @@ public class NewTaskActivity extends AppCompatActivity {
     protected EditText taskNameView;
     protected EditText taskDescriptionView;
     protected TextView dueDateView;
+    protected Spinner priorityView;
     protected Button saveButton;
 
     protected Date dueDate;
@@ -49,6 +51,7 @@ public class NewTaskActivity extends AppCompatActivity {
         taskNameView = findViewById(R.id.task_name);
         taskDescriptionView = findViewById(R.id.task_description);
         dueDateView = findViewById(R.id.due_date);
+        priorityView = findViewById(R.id.priority);
 
         saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -56,8 +59,9 @@ public class NewTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String taskName = taskNameView.getText().toString();
                 String taskDescription = taskDescriptionView.getText().toString();
+                int taskPriority = getResources().getIntArray(R.array.priority_values)[priorityView.getSelectedItemPosition()];
 
-                Task task = new Task(0, taskName, taskDescription, dueDate);
+                Task task = new Task(0, taskName, taskDescription, dueDate, taskPriority);
                 task.save(NewTaskActivity.this.getApplicationContext());
 
                 NewTaskActivity.this.setResult(Activity.RESULT_OK);
