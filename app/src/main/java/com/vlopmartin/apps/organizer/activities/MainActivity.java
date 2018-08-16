@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         taskList.add(new Task("Task 2", "Description 2"));
         taskList.add(new Task("Task 3", "Description 3"));*/
 
-        taskListAdapter = new TaskListAdapter(taskList);
+        taskListAdapter = new TaskListAdapter(taskList, getResources());
         mainListView.setAdapter(taskListAdapter);
 
     }

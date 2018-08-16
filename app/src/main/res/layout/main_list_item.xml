@@ -15,7 +15,7 @@
         android:layout_marginLeft="@dimen/list_item_horizontal_margin"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/list_item_vertical_margin"
-        android:text="Name"
+        android:text="@string/task_name_hint"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/list_item_horizontal_margin"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/list_item_vertical_margin"
-        android:text="Description"
+        android:text="@string/task_description_hint"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,9 +40,22 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="DueDate"
+        android:text="@string/task_due_date_hint"
         app:layout_constraintEnd_toStartOf="@+id/check_mark"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/task_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/task_priority_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/check_mark"
+        app:layout_constraintTop_toBottomOf="@+id/task_due_date" />
 
     <Space
         android:layout_width="wrap_content"

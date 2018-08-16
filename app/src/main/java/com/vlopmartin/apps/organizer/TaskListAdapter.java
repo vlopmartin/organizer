@@ -3,6 +3,8 @@ package com.vlopmartin.apps.organizer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,7 @@ import java.util.Locale;
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Task> taskList;
+    private Resources resources;
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -51,10 +54,26 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
 
+        public void setTaskPriority(long priority, int[] priorityValues, String[] priorityStrings, String[] priorityColors) {
+            TextView textView = this.itemView.findViewById(R.id.task_priority);
+            if (priority != 0) {
+                int priorityIndex = 0;
+                for (int i = 0; i < priorityValues.length; i++) {
+                    if (priorityValues[i] == priority) {
+                        priorityIndex = i;
+                    }
+                }
+                textView.setText(priorityStrings[priorityIndex]);
+                textView.setTextColor(Color.parseColor(priorityColors[priorityIndex]));
+            } else {
+                textView.setText("");
+            }
+        }
     }
 
-    public TaskListAdapter(List<Task> taskList) {
+    public TaskListAdapter(List<Task> taskList, Resources resources) {
         this.taskList = taskList;
+        this.resources = resources;
     }
 
     public List<Task> getTaskList() {
@@ -80,6 +99,10 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
         taskViewHolder.setTaskDueDate(task.getDueDate());
+        taskViewHolder.setTaskPriority(task.getPriority(),
+                resources.getIntArray(R.array.priority_values),
+                resources.getStringArray(R.array.priorities),
+                resources.getStringArray(R.array.priority_colors));
 
         // On clicking the list item, open an activity with the task details
         taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
