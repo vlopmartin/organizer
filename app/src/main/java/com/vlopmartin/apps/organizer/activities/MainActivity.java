@@ -20,6 +20,12 @@ import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 import com.vlopmartin.apps.organizer.TaskListAdapter;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -27,9 +33,6 @@ public class MainActivity extends AppCompatActivity
 
     public List<Task> taskList;
     public TaskListAdapter taskListAdapter;
-
-    //public static final int NEW_TASK_REQUEST = 1;
-    //public static final int TASK_DETAILS_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
                 MainActivity.this.startActivity(intent);
-                //MainActivity.this.startActivityForResult(intent, NEW_TASK_REQUEST);
             }
         });
 
@@ -63,21 +65,24 @@ public class MainActivity extends AppCompatActivity
         mainListView.setLayoutManager(new LinearLayoutManager(this));
 
         taskList = Task.getList(this.getApplicationContext());
-
-        /*taskList = new ArrayList<Task>();
-        taskList.add(new Task("Task 1", "Description 1"));
-        taskList.add(new Task("Task 2", "Description 2"));
-        taskList.add(new Task("Task 3", "Description 3"));*/
+        sortTaskList(taskList);
 
         taskListAdapter = new TaskListAdapter(taskList, getResources());
         mainListView.setAdapter(taskListAdapter);
+    }
 
+    protected void sortTaskList(List<Task> taskList) {
+        Calendar now = new GregorianCalendar();
+        Calendar dueDate = new GregorianCalendar();
+
+        Collections.sort(taskList, new Task.PriorityComparator());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         taskList = Task.getList(this.getApplicationContext());
+        sortTaskList(taskList);
         taskListAdapter.setTaskList(taskList);
         taskListAdapter.notifyDataSetChanged();
     }

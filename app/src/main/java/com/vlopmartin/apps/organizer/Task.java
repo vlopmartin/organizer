@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +96,24 @@ public class Task {
         setDescription(description);
         setDueDate(dueDate);
         setPriority(priority);
+    }
+
+    public static class PriorityComparator implements Comparator<Task> {
+
+        @Override
+        public int compare(Task t1, Task t2) {
+            if (t1.priority == 0) {
+                if (t2.priority == 0) return 0;
+                else return 1;
+            } else {
+                if (t2.priority == 0) return -1;
+                else {
+                    if (t1.priority < t2.priority) return -1;
+                    else if (t1.priority > t2.priority) return 1;
+                    else return 0;
+                }
+            }
+        }
     }
 
     public long getId() {
