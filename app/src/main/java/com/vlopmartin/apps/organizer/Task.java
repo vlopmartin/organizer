@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Task {
@@ -113,6 +115,72 @@ public class Task {
                     else return 0;
                 }
             }
+        }
+    }
+
+    public static class DateComparator implements Comparator<Task> {
+
+        private static int compareDay(Calendar c1, Calendar c2) {
+            int year1 = c1.get(Calendar.YEAR);
+            int year2 = c2.get(Calendar.YEAR);
+            if (year1 > year2) return 1;
+            else if (year1 < year2) return -1;
+            else {
+                int month1 = c1.get(Calendar.MONTH);
+                int month2 = c2.get(Calendar.MONTH);
+                if (month1 > month2) return 1;
+                else if (month1 < month2) return -1;
+                else {
+                    int day1 = c1.get(Calendar.DAY_OF_MONTH);
+                    int day2 = c2.get(Calendar.DAY_OF_MONTH);
+                    if (day1 > day2) return 1;
+                    else if (day1 < day2) return -1;
+                    else return 0;
+                }
+            }
+        }
+
+        @Override
+        public int compare(Task t1, Task t2) {
+            // Calendar representing today
+            Calendar now = new GregorianCalendar();
+            now.setTime(new Date());
+
+            // Calendars representing due dates of t1 and t2
+            Calendar c1 = null;
+            Calendar c2 = null;
+            if (t1.getDueDate() != null) {
+                c1 = new GregorianCalendar();
+                c1.setTime(t1.getDueDate());
+            }
+            if (t2.getDueDate() != null) {
+                c2 = new GregorianCalendar();
+                c2.setTime(t2.getDueDate());
+            }
+
+            // If any of them are null
+            if (c1 == null) {
+                if (c2 == null) return 0;
+                else {
+                    if (compareDay(c2, now) > 0) return -1;
+                    else return 1;
+                }
+            }
+            if (c2 == null) {
+                if (compareDay(c1, now) > 0) return 1;
+                else return -1;
+            }
+
+            // If any of them are in the future
+            if (compareDay(c1, now) > 0) {
+                if (compareDay(c2, now) > 0) return compareDay(c1, c2);
+                else return 1;
+            } else if (compareDay(c2, now) > 0) {
+                return -1;
+            }
+
+            // Otherwise
+            return compareDay(c1, c2);
         }
     }
 

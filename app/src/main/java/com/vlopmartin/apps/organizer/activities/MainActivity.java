@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         Calendar dueDate = new GregorianCalendar();
 
         Collections.sort(taskList, new Task.PriorityComparator());
+        Collections.sort(taskList, new Task.DateComparator());
     }
 
     @Override
