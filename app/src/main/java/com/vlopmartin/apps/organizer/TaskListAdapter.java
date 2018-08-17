@@ -18,7 +18,9 @@ import com.vlopmartin.apps.organizer.activities.TaskDetailsActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,10 +47,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView.setText(taskDescription);
         }
 
-        public void setTaskDueDate(Date taskDueDate) {
+        public void setTaskDueDate(Date taskDueDate, String futureColor) {
             TextView textView = this.itemView.findViewById(R.id.task_due_date);
             if (taskDueDate != null) {
                 textView.setText(dateFormat.format(taskDueDate));
+
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(taskDueDate);
+                Calendar now = Calendar.getInstance();
+                Calendar tomorrow = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                if (calendar.compareTo(tomorrow) > 0) {
+                    itemView.setBackgroundColor(Color.parseColor(futureColor));
+                }
             } else {
                 textView.setText("");
             }
@@ -98,7 +108,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
-        taskViewHolder.setTaskDueDate(task.getDueDate());
+        taskViewHolder.setTaskDueDate(task.getDueDate(), resources.getString(R.string.colorFutureTaskBackground));
         taskViewHolder.setTaskPriority(task.getPriority(),
                 resources.getIntArray(R.array.priority_values),
                 resources.getStringArray(R.array.priorities),
