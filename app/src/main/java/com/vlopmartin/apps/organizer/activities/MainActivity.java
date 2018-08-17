@@ -42,24 +42,15 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();*/
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Custom code starts here
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
 
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
@@ -77,6 +68,11 @@ public class MainActivity extends AppCompatActivity
 
         Collections.sort(taskList, new Task.PriorityComparator());
         Collections.sort(taskList, new Task.DateComparator());
+    }
+
+    public void onNewTask(View view) {
+        Intent intent = new Intent(MainActivity.this, NewTaskActivity.class);
+        MainActivity.this.startActivity(intent);
     }
 
     @Override

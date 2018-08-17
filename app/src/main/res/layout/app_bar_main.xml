@@ -17,7 +17,22 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ImageButton
+                android:layout_width="@android:dimen/app_icon_size"
+                android:layout_height="@android:dimen/app_icon_size"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:contentDescription="@string/add_button_description"
+                android:focusable="true"
+                android:onClick="onNewTask"
+                android:src="@drawable/ic_add_black_24dp"
+                android:tint="@android:color/white" />
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
