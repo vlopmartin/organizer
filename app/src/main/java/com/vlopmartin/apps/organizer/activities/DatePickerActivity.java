@@ -22,6 +22,12 @@ public class DatePickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_picker);
         datePicker = this.findViewById(R.id.date_picker);
+
+        Intent data = getIntent();
+        int day = data.getIntExtra(DAY, 0);
+        int month = data.getIntExtra(MONTH, 0);
+        int year = data.getIntExtra(YEAR, 0);
+        if (day != 0 && month != 0 && year != 0) datePicker.updateDate(year, month - 1, day);
     }
 
     public void onSave(View v) {

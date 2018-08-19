@@ -68,6 +68,11 @@ public class NewTaskActivity extends AppCompatActivity {
 
     public void showDueDatePicker(View v) {
         Intent intent = new Intent(this, DatePickerActivity.class);
+        if (dueDate != null) {
+            intent.putExtra(DatePickerActivity.DAY, dueDate.getDayOfMonth());
+            intent.putExtra(DatePickerActivity.MONTH, dueDate.getMonthValue());
+            intent.putExtra(DatePickerActivity.YEAR, dueDate.getYear());
+        }
         startActivityForResult(intent, DUE_DATE_REQUEST);
     }
 
