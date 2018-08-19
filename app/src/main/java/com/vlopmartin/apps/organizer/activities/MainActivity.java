@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         Collections.sort(taskList, new Task.PriorityComparator());
         Collections.sort(taskList, new Task.DateComparator());
+        Collections.sort(taskList, new Task.CurrentComparator());
     }
 
     public void onNewTask(View view) {

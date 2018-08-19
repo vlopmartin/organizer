@@ -27,7 +27,7 @@ public class DatePickerActivity extends AppCompatActivity {
     public void onSave(View v) {
         Intent intent = new Intent();
         intent.putExtra(DAY, datePicker.getDayOfMonth());
-        intent.putExtra(MONTH, datePicker.getMonth());
+        intent.putExtra(MONTH, datePicker.getMonth() + 1); // Months go from 0 to 11 here??
         intent.putExtra(YEAR, datePicker.getYear());
         setResult(Activity.RESULT_OK, intent);
         finish();

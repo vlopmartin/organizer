@@ -110,15 +110,27 @@ public class Task {
 
     }
 
-    public static class DateComparator extends RankComparator<Task> {
+    public static class CurrentComparator extends RankComparator<Task> {
 
         protected int getRank(Task task) {
             LocalDate dueDate = task.getDueDate();
             if (dueDate == null) return 1;
             else {
-                if (dueDate.compareTo(LocalDate.now()) < 0) return 0;
+                if (dueDate.compareTo(LocalDate.now()) <= 0) return 0;
                 else return 2;
             }
+        }
+
+    }
+
+    public static class DateComparator implements Comparator<Task> {
+
+        @Override
+        public int compare(Task t1, Task t2) {
+            LocalDate d1 = t1.getDueDate();
+            LocalDate d2 = t2.getDueDate();
+            if (d1 == null || d2 == null) return 0; // CurrentComparator will take care of nulls!
+            return d1.compareTo(d2);
         }
 
     }
