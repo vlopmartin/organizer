@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -46,10 +47,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, int defaultColor, int futureColor) {
             TextView textView = this.itemView.findViewById(R.id.task_due_date);
             itemView.setBackgroundColor(defaultColor);
+            textView.setTypeface(null, Typeface.NORMAL);
             if (taskDueDate != null) {
                 textView.setText(taskDueDate.format(dateFormat));
                 if (taskDueDate.compareTo(LocalDate.now()) > 0) {
                     itemView.setBackgroundColor(futureColor);
+                } else if (taskDueDate.compareTo(LocalDate.now()) < 0) {
+                    textView.setTypeface(null, Typeface.BOLD);
                 }
             } else {
                 textView.setText("");
