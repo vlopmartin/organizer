@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <string name="colorFutureTaskBackground">#D4D4D4</string>
-    <string name="colorDefaultTaskBackground">#FFFFFF</string>
+    <color name="colorFutureTaskBackground">#D4D4D4</color>
+    <color name="colorDefaultTaskBackground">#FFFFFF</color>
 </resources>
