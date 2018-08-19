@@ -79,7 +79,7 @@ public class NewTaskActivity extends AppCompatActivity {
                 int month = data.getIntExtra(DatePickerActivity.MONTH, 0);
                 int year = data.getIntExtra(DatePickerActivity.YEAR, 0);
                 dueDate = LocalDate.of(year, month, day);
-                dueDateView.setText(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
+                dueDateView.setText(dueDate.format(dateFormat));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
