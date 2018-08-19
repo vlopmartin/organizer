@@ -16,15 +16,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageButton
                 android:layout_width="@android:dimen/app_icon_size"
                 android:layout_height="@android:dimen/app_icon_size"
                 android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="@dimen/add_button_margin"
+                android:layout_marginRight="@dimen/add_button_margin"
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:contentDescription="@string/add_button_description"
