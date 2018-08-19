@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <string name="colorFutureTaskBackground">#D4D4D4</string>
+    <string name="colorDefaultTaskBackground">#FFFFFF</string>
 </resources>

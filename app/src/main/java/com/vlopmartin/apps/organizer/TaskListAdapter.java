@@ -43,8 +43,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView.setText(taskDescription);
         }
 
-        public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, String futureColor) {
+        public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, String defaultColor, String futureColor) {
             TextView textView = this.itemView.findViewById(R.id.task_due_date);
+            itemView.setBackgroundColor(Color.parseColor(defaultColor));
             if (taskDueDate != null) {
                 textView.setText(taskDueDate.format(dateFormat));
                 if (taskDueDate.compareTo(LocalDate.now()) > 0) {
@@ -100,7 +101,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
-        taskViewHolder.setTaskDueDate(task.getDueDate(), dateFormat, resources.getString(R.string.colorFutureTaskBackground));
+        taskViewHolder.setTaskDueDate(task.getDueDate(), dateFormat,
+                resources.getString(R.string.colorDefaultTaskBackground),
+                resources.getString(R.string.colorFutureTaskBackground));
         taskViewHolder.setTaskPriority(task.getPriority(),
                 resources.getIntArray(R.array.priority_values),
                 resources.getStringArray(R.array.priorities),
