@@ -1,6 +1,5 @@
 package com.vlopmartin.apps.organizer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -16,22 +15,19 @@ import android.widget.TextView;
 import com.vlopmartin.apps.organizer.activities.MainActivity;
 import com.vlopmartin.apps.organizer.activities.TaskDetailsActivity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.List;
-import java.util.Locale;
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Task> taskList;
     private Resources resources;
 
-    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+    private DateTimeFormatter dateFormat;
 
-        private static final DateFormat dateFormat = new SimpleDateFormat("dd MMM");
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         public TaskViewHolder(View itemView) {
             super(itemView);
@@ -47,16 +43,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView.setText(taskDescription);
         }
 
-        public void setTaskDueDate(Date taskDueDate, String futureColor) {
+        public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, String futureColor) {
             TextView textView = this.itemView.findViewById(R.id.task_due_date);
             if (taskDueDate != null) {
-                textView.setText(dateFormat.format(taskDueDate));
-
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(taskDueDate);
-                Calendar now = Calendar.getInstance();
-                Calendar tomorrow = new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-                if (calendar.compareTo(tomorrow) > 0) {
+                textView.setText(taskDueDate.format(dateFormat));
+                if (taskDueDate.compareTo(LocalDate.now()) > 0) {
                     itemView.setBackgroundColor(Color.parseColor(futureColor));
                 }
             } else {
@@ -84,6 +75,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public TaskListAdapter(List<Task> taskList, Resources resources) {
         this.taskList = taskList;
         this.resources = resources;
+        this.dateFormat = DateTimeFormatter.ofPattern(resources.getString(R.string.list_date_format));
     }
 
     public List<Task> getTaskList() {
@@ -108,7 +100,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
-        taskViewHolder.setTaskDueDate(task.getDueDate(), resources.getString(R.string.colorFutureTaskBackground));
+        taskViewHolder.setTaskDueDate(task.getDueDate(), dateFormat, resources.getString(R.string.colorFutureTaskBackground));
         taskViewHolder.setTaskPriority(task.getPriority(),
                 resources.getIntArray(R.array.priority_values),
                 resources.getStringArray(R.array.priorities),

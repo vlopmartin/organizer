@@ -24,4 +24,6 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+    <string name="list_date_format">dd MMM</string>
+    <string name="details_date_format">dd MMM yyyy</string>
 </resources>

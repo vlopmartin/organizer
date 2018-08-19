@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,19 +15,14 @@ import android.widget.TextView;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
 public class NewTaskActivity extends AppCompatActivity {
 
     public static final int DUE_DATE_REQUEST = 1;
 
-    protected static final DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+    protected DateTimeFormatter dateFormat;
 
     protected EditText taskNameView;
     protected EditText taskDescriptionView;
@@ -36,7 +30,7 @@ public class NewTaskActivity extends AppCompatActivity {
     protected Spinner priorityView;
     protected Button saveButton;
 
-    protected Date dueDate;
+    protected LocalDate dueDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +46,8 @@ public class NewTaskActivity extends AppCompatActivity {
         taskDescriptionView = findViewById(R.id.task_description);
         dueDateView = findViewById(R.id.due_date);
         priorityView = findViewById(R.id.priority);
+
+        dateFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_date_format));
 
         saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +78,8 @@ public class NewTaskActivity extends AppCompatActivity {
                 int day = data.getIntExtra(DatePickerActivity.DAY, 0);
                 int month = data.getIntExtra(DatePickerActivity.MONTH, 0);
                 int year = data.getIntExtra(DatePickerActivity.YEAR, 0);
-                Calendar calendar = new GregorianCalendar(year, month, day); // Apparently months go from 0 to 11 in Calendar?
-                dueDate = calendar.getTime();
-                dueDateView.setText(dateFormat.format(dueDate));
+                dueDate = LocalDate.of(year, month, day);
+                dueDateView.setText(dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

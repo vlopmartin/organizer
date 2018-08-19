@@ -7,11 +7,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.temporal.ChronoField;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Task {
@@ -21,8 +21,8 @@ public class Task {
     private long id;
     private String name;
     private String description;
-    private Date dueDate;
-    private long priority;
+    private LocalDate dueDate;
+    private int priority;
 
 
     public static List<Task> getList(Context ctx) {
@@ -35,14 +35,14 @@ public class Task {
         String taskName;
         String taskDescription;
         long taskDueDate;
-        long taskPriority;
+        int taskPriority;
         while (cursor.moveToNext()) {
             taskId = cursor.getLong(cursor.getColumnIndex("ID"));
             taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            taskPriority = cursor.getLong(cursor.getColumnIndex("PRIORITY"));
-            ret.add(new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate), taskPriority));
+            taskPriority = cursor.getInt(cursor.getColumnIndex("PRIORITY"));
+            ret.add(new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : LocalDate.ofEpochDay(taskDueDate), taskPriority));
         }
 
         cursor.close();
@@ -60,8 +60,8 @@ public class Task {
             String taskName = cursor.getString(cursor.getColumnIndex("NAME"));
             String taskDescription = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
             long taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
-            long taskPriority = cursor.getLong(cursor.getColumnIndex("PRIORITY"));
-            ret = new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : new Date(taskDueDate), taskPriority);
+            int taskPriority = cursor.getInt(cursor.getColumnIndex("PRIORITY"));
+            ret = new Task(taskId, taskName, taskDescription, taskDueDate == 0 ? null : LocalDate.ofEpochDay(taskDueDate), taskPriority);
         } else {
             ret = null;
         }
@@ -79,7 +79,7 @@ public class Task {
         }
         values.put("NAME", this.name);
         values.put("DESCRIPTION", this.description);
-        values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getTime());
+        values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getLong(ChronoField.EPOCH_DAY));
         values.put("PRIORITY", this.priority);
 
         long id = db.replace("TASKS", null, values);
@@ -92,7 +92,7 @@ public class Task {
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
     }
 
-    public Task(long id, String name, String description, Date dueDate, long priority) {
+    public Task(long id, String name, String description, LocalDate dueDate, int priority) {
         setId(id);
         setName(name);
         setDescription(description);
@@ -100,88 +100,27 @@ public class Task {
         setPriority(priority);
     }
 
-    public static class PriorityComparator implements Comparator<Task> {
+    public static class PriorityComparator extends RankComparator<Task> {
 
-        @Override
-        public int compare(Task t1, Task t2) {
-            if (t1.priority == 0) {
-                if (t2.priority == 0) return 0;
-                else return 1;
-            } else {
-                if (t2.priority == 0) return -1;
-                else {
-                    if (t1.priority < t2.priority) return -1;
-                    else if (t1.priority > t2.priority) return 1;
-                    else return 0;
-                }
-            }
+        protected int getRank(Task task) {
+            int priority = task.getPriority();
+            if (priority == 0) return 100;
+            else return priority;
         }
+
     }
 
-    public static class DateComparator implements Comparator<Task> {
+    public static class DateComparator extends RankComparator<Task> {
 
-        private static int compareDay(Calendar c1, Calendar c2) {
-            int year1 = c1.get(Calendar.YEAR);
-            int year2 = c2.get(Calendar.YEAR);
-            if (year1 > year2) return 1;
-            else if (year1 < year2) return -1;
+        protected int getRank(Task task) {
+            LocalDate dueDate = task.getDueDate();
+            if (dueDate == null) return 1;
             else {
-                int month1 = c1.get(Calendar.MONTH);
-                int month2 = c2.get(Calendar.MONTH);
-                if (month1 > month2) return 1;
-                else if (month1 < month2) return -1;
-                else {
-                    int day1 = c1.get(Calendar.DAY_OF_MONTH);
-                    int day2 = c2.get(Calendar.DAY_OF_MONTH);
-                    if (day1 > day2) return 1;
-                    else if (day1 < day2) return -1;
-                    else return 0;
-                }
+                if (dueDate.compareTo(LocalDate.now()) < 0) return 0;
+                else return 2;
             }
         }
 
-        @Override
-        public int compare(Task t1, Task t2) {
-            // Calendar representing today
-            Calendar now = new GregorianCalendar();
-            now.setTime(new Date());
-
-            // Calendars representing due dates of t1 and t2
-            Calendar c1 = null;
-            Calendar c2 = null;
-            if (t1.getDueDate() != null) {
-                c1 = new GregorianCalendar();
-                c1.setTime(t1.getDueDate());
-            }
-            if (t2.getDueDate() != null) {
-                c2 = new GregorianCalendar();
-                c2.setTime(t2.getDueDate());
-            }
-
-            // If any of them are null
-            if (c1 == null) {
-                if (c2 == null) return 0;
-                else {
-                    if (compareDay(c2, now) > 0) return -1;
-                    else return 1;
-                }
-            }
-            if (c2 == null) {
-                if (compareDay(c1, now) > 0) return 1;
-                else return -1;
-            }
-
-            // If any of them are in the future
-            if (compareDay(c1, now) > 0) {
-                if (compareDay(c2, now) > 0) return compareDay(c1, c2);
-                else return 1;
-            } else if (compareDay(c2, now) > 0) {
-                return -1;
-            }
-
-            // Otherwise
-            return compareDay(c1, c2);
-        }
     }
 
     public long getId() {
@@ -208,15 +147,13 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
-    public long getPriority() { return priority; }
+    public int getPriority() { return priority; }
 
-    public void setPriority(long priority) { this.priority = priority; }
+    public void setPriority(int priority) { this.priority = priority; }
 }

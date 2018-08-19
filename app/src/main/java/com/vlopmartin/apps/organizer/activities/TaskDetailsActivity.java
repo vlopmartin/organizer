@@ -7,6 +7,8 @@ import android.view.View;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 
+import org.threeten.bp.format.DateTimeFormatter;
+
 public class TaskDetailsActivity extends NewTaskActivity {
 
     public static final String TASK_ID = "com.vlopmartin.apps.organizer.task_id";
@@ -26,7 +28,7 @@ public class TaskDetailsActivity extends NewTaskActivity {
         taskDescriptionView.setText(task.getDescription());
         dueDate = task.getDueDate();
         if (dueDate != null) {
-            dueDateView.setText(dateFormat.format(dueDate));
+            dueDateView.setText(dueDate.format(dateFormat));
         }
         int[] priorityValues = getResources().getIntArray(R.array.priority_values);
         int priorityIndex = 0;
