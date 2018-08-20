@@ -112,7 +112,7 @@ public class Task {
                 taskDescription,
                 taskDueDate == 0 ? null : LocalDate.ofEpochDay(taskDueDate),
                 taskPriority,
-                Period.parse(taskRepeatPeriod));
+                taskRepeatPeriod.equals("") ? null : Period.parse(taskRepeatPeriod));
     }
 
     public static Task getById(Context ctx, long id) {

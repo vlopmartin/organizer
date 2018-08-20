@@ -26,4 +26,12 @@
     </string-array>
     <string name="list_date_format">dd MMM</string>
     <string name="details_date_format">dd MMM yyyy</string>
+    <string name="repeat_period_hint">Repeat every:</string>
+    <string name="repeat_days" >days</string>
+    <string name="repeat_months">months</string>
+    <string name="repeat_years">years</string>
+    <string-array name="repeat_periods">
+        <item>days</item>
+        <item>months</item>
+    </string-array>
 </resources>

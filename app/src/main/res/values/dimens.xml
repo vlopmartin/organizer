@@ -9,4 +9,5 @@
     <dimen name="list_item_vertical_margin">4dp</dimen>
     <dimen name="list_item_spacing">8dp</dimen>
     <dimen name="add_button_margin">8dp</dimen>
+    <dimen name="form_element_margin">8dp</dimen>
 </resources>

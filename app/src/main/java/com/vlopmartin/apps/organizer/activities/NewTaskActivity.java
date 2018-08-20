@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 
 public class NewTaskActivity extends AppCompatActivity {
@@ -29,8 +31,15 @@ public class NewTaskActivity extends AppCompatActivity {
     protected TextView dueDateView;
     protected Spinner priorityView;
     protected Button saveButton;
+    protected View repeatSelectionView;
+    protected EditText repeatDaysView;
+    protected EditText repeatMonthsView;
+    protected EditText repeatYearsView;
+    protected ImageButton addRepeatButton;
+    protected ImageButton clearRepeatButton;
 
     protected LocalDate dueDate;
+    protected boolean repeat = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,13 @@ public class NewTaskActivity extends AppCompatActivity {
         taskDescriptionView = findViewById(R.id.task_description);
         dueDateView = findViewById(R.id.due_date);
         priorityView = findViewById(R.id.priority);
+        repeatSelectionView = findViewById(R.id.repeat_selection);
+        repeatDaysView = findViewById(R.id.repeat_period_days);
+        repeatMonthsView = findViewById(R.id.repeat_period_months);
+        repeatYearsView = findViewById(R.id.repeat_period_years);
+        addRepeatButton = findViewById(R.id.add_repeat_button);
+        clearRepeatButton = findViewById(R.id.clear_repeat_button);
+
 
         dateFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_date_format));
 
@@ -53,17 +69,34 @@ public class NewTaskActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String taskName = taskNameView.getText().toString();
-                String taskDescription = taskDescriptionView.getText().toString();
-                int taskPriority = getResources().getIntArray(R.array.priority_values)[priorityView.getSelectedItemPosition()];
-
-                Task task = new Task(0, taskName, taskDescription, dueDate, taskPriority);
+                Task task = readTaskData(0);
                 task.save(NewTaskActivity.this.getApplicationContext());
 
                 NewTaskActivity.this.setResult(Activity.RESULT_OK);
                 NewTaskActivity.this.finish();
             }
         });
+    }
+
+    protected Task readTaskData(long taskId) {
+        String taskName = taskNameView.getText().toString();
+        String taskDescription = taskDescriptionView.getText().toString();
+        int taskPriority = getResources().getIntArray(R.array.priority_values)[priorityView.getSelectedItemPosition()];
+        Period taskPeriod = null;
+        if (repeat) {
+            String repeatDays = repeatDaysView.getText().toString();
+            String repeatMonths = repeatMonthsView.getText().toString();
+            String repeatYears = repeatYearsView.getText().toString();
+            System.out.println("Repeat years: " + repeatYears);
+            System.out.println(repeatYears.equals("") ? "Yes" : "No");
+            taskPeriod = Period.of(
+                    repeatYears.equals("") ? 0 : Integer.parseInt(repeatYears),
+                    repeatMonths.equals("") ? 0 : Integer.parseInt(repeatMonths),
+                    repeatDays.equals("") ? 0 : Integer.parseInt(repeatDays)
+            );
+        }
+
+        return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod);
     }
 
     public void showDueDatePicker(View v) {
@@ -74,6 +107,20 @@ public class NewTaskActivity extends AppCompatActivity {
             intent.putExtra(DatePickerActivity.YEAR, dueDate.getYear());
         }
         startActivityForResult(intent, DUE_DATE_REQUEST);
+    }
+
+    public void onAddRepeat(View v) {
+        addRepeatButton.setVisibility(View.GONE);
+        clearRepeatButton.setVisibility(View.VISIBLE);
+        repeatSelectionView.setVisibility(View.VISIBLE);
+        repeat = true;
+    }
+
+    public void onClearRepeat(View v) {
+        addRepeatButton.setVisibility(View.VISIBLE);
+        clearRepeatButton.setVisibility(View.GONE);
+        repeatSelectionView.setVisibility(View.GONE);
+        repeat = false;
     }
 
     @Override

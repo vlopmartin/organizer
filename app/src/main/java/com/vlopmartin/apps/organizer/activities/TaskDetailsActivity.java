@@ -7,6 +7,7 @@ import android.view.View;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 
+import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 
 public class TaskDetailsActivity extends NewTaskActivity {
@@ -39,15 +40,18 @@ public class TaskDetailsActivity extends NewTaskActivity {
             }
         }
         priorityView.setSelection(priorityIndex);
+        Period repeatPeriod = task.getRepeatPeriod();
+        if (repeatPeriod != null) {
+            this.onAddRepeat(addRepeatButton);
+            repeatDaysView.setText(String.valueOf(repeatPeriod.getDays()));
+            repeatMonthsView.setText(String.valueOf(repeatPeriod.getMonths()));
+            repeatYearsView.setText(String.valueOf(repeatPeriod.getYears()));
+        }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                task.setName(taskNameView.getText().toString());
-                task.setDescription(taskDescriptionView.getText().toString());
-                task.setDueDate(dueDate);
-                int taskPriority = getResources().getIntArray(R.array.priority_values)[priorityView.getSelectedItemPosition()];
-                task.setPriority(taskPriority);
+                task = readTaskData(task.getId());
                 task.save(TaskDetailsActivity.this.getApplicationContext());
 
                 TaskDetailsActivity.this.setResult(Activity.RESULT_OK);
