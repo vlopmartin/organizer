@@ -72,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:entries="@array/priorities" />
     </LinearLayout>
 
@@ -123,7 +124,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:gravity="left|start"
+        android:gravity="start"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/linearLayout2"
@@ -141,6 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/form_element_margin"
+                android:layout_marginEnd="@dimen/form_element_margin"
                 android:ems="2"
                 android:inputType="number" />
 
@@ -164,6 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/form_element_margin"
+                android:layout_marginEnd="@dimen/form_element_margin"
                 android:ems="2"
                 android:inputType="number" />
 
@@ -187,6 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/form_element_margin"
+                android:layout_marginEnd="@dimen/form_element_margin"
                 android:ems="2"
                 android:inputType="number" />
 
