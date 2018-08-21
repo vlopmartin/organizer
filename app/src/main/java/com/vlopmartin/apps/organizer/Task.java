@@ -73,8 +73,9 @@ public class Task {
     }
 
     public Task copy() {
-        return new Task(this.getId(), this.getName(), this.getDescription(), this.getDueDate(), this.getPriority(), this.getRepeatPeriod());
+        return new Task(0, this.getName(), this.getDescription(), this.getDueDate(), this.getPriority(), this.getRepeatPeriod());
     }
+
 
     public void save(Context ctx) {
         SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
@@ -97,6 +98,25 @@ public class Task {
         SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
 
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
+    }
+
+    public Task repeat(Context ctx) {
+        Period period = this.getRepeatPeriod();
+        if (period != null) {
+            Task task = this.copy();
+            LocalDate dueDate = this.getDueDate().plus(period);
+            task.setDueDate(dueDate);
+            task.save(ctx);
+            return task;
+        } else {
+            return null;
+        }
+    }
+
+    public Task complete(Context ctx) {
+        Task task = this.repeat(ctx);
+        this.delete(ctx);
+        return task;
     }
 
     private static Task readCursor(Cursor cursor) {

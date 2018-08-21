@@ -128,13 +128,26 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         taskViewHolder.itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Complete the task
                 final int index = taskList.indexOf(task);
                 taskList.remove(index);
-                task.delete(v.getContext());
+                final Task newTask = task.complete(v.getContext());
                 TaskListAdapter.this.notifyItemRemoved(index);
+                // If the task got repeated, insert the new task
+                final int newIndex = taskList.size();
+                if (newTask != null) {
+                    taskList.add(newIndex, newTask);
+                    TaskListAdapter.this.notifyItemInserted(newIndex);
+                }
                 Snackbar.make(v, R.string.task_completed, Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // Remove the new task, if it was created
+                        if (newTask != null) {
+                            newTask.delete(v.getContext());
+                            taskList.remove(newIndex);
+                            TaskListAdapter.this.notifyItemRemoved(newIndex);
+                        }
                         taskList.add(index, task);
                         task.save(v.getContext());
                         TaskListAdapter.this.notifyItemInserted(index);
