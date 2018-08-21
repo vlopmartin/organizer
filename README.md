@@ -12,3 +12,7 @@ This is a personal project, so it is made for my personal needs, but everyone is
 * Set a due date for a task. The main list will display first the tasks that are due today, or that have no due date
 * Set a priority for a task. The main list will sort the tasks by priority
 * Set a repeat period for a task. When you mark a task as completed, if it's marked as repeating, it will create a copy of that task for the future
+
+## Download
+
+You can download the APK [here](https://github.com/vlopmartin/organizer/releases/tag/v1.0).
