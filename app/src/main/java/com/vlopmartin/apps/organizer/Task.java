@@ -102,10 +102,11 @@ public class Task {
 
     public Task repeat(Context ctx) {
         Period period = this.getRepeatPeriod();
-        if (period != null) {
+        LocalDate dueDate = this.getDueDate();
+        if (period != null && dueDate != null) {
             Task task = this.copy();
-            LocalDate dueDate = this.getDueDate().plus(period);
-            task.setDueDate(dueDate);
+            LocalDate newDueDate = dueDate.plus(period);
+            task.setDueDate(newDueDate);
             task.save(ctx);
             return task;
         } else {
