@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vlopmartin.apps.organizer.activities.MainActivity;
@@ -44,8 +45,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView.setText(taskDescription);
         }
 
-        public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, int defaultColor, int futureColor) {
+        public void setTaskDueDate(LocalDate taskDueDate, DateTimeFormatter dateFormat, boolean repeat, int defaultColor, int futureColor) {
             TextView textView = this.itemView.findViewById(R.id.task_due_date);
+            ImageView repeatIcon = this.itemView.findViewById(R.id.repeat_icon);
             itemView.setBackgroundColor(defaultColor);
             textView.setTypeface(null, Typeface.NORMAL);
             if (taskDueDate != null) {
@@ -55,8 +57,11 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else if (taskDueDate.compareTo(LocalDate.now()) < 0) {
                     textView.setTypeface(null, Typeface.BOLD);
                 }
+                if (repeat) repeatIcon.setVisibility(View.VISIBLE);
+                else repeatIcon.setVisibility(View.GONE);
             } else {
                 textView.setText("");
+                repeatIcon.setVisibility(View.GONE);
             }
         }
 
@@ -105,7 +110,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
-        taskViewHolder.setTaskDueDate(task.getDueDate(), dateFormat,
+        taskViewHolder.setTaskDueDate(task.getDueDate(), dateFormat, task.getRepeatPeriod() != null,
                 resources.getColor(R.color.colorDefaultTaskBackground),
                 resources.getColor(R.color.colorFutureTaskBackground));
         taskViewHolder.setTaskPriority(task.getPriority(),
