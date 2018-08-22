@@ -13,7 +13,7 @@
     <string-array name="priority_colors">
         <item>#000000</item>
         <item>#ff5050</item>
-        <item>#d0d050</item>
+        <item>#f0f050</item>
         <item>#50ff50</item>
     </string-array>
 </resources>
