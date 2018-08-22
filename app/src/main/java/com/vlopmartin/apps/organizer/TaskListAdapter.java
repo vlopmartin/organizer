@@ -30,7 +30,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Resources resources;
 
     private DateTimeFormatter dateFormat;
-    protected int delay = 1000;
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -182,7 +181,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }).show();
 
                     }
-                }, delay);
+                }, resources.getInteger(R.integer.complete_delay));
             }
         });
     }
