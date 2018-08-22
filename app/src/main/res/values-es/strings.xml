@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Organizador</string>
+    <string name="title_activity_new_task">Nueva Tarea</string>
+    <string name="title_activity_task_details">Detalles de Tarea</string>
+    <string name="task_name_hint">Nombre</string>
+    <string name="task_description_hint">Descripción</string>
+    <string name="save_button">Guardar</string>
+    <string name="delete_button">Borrar</string>
+    <string name="task_completed">Tarea completada</string>
+    <string name="undo">Deshacer</string>
+    <string name="due_date_label">Fecha</string>
+    <string name="task_due_date_hint">Fecha</string>
+    <string name="task_priority_hint">Prioridad</string>
+    <string name="add_button_description">Añadir una tarea nueva</string>
+    <string name="list_date_format">dd MMM</string>
+    <string name="details_date_format">dd MMM yyyy</string>
+    <string name="repeat_period_hint">Repetir cada:</string>
+    <string name="repeat_days">días</string>
+    <string name="repeat_months">meses</string>
+    <string name="repeat_years">años</string>
+    <string-array name="priorities">
+        <item>(Ninguna)</item>
+        <item>Alta</item>
+        <item>Media</item>
+        <item>Baja</item>
+    </string-array>
+</resources>
