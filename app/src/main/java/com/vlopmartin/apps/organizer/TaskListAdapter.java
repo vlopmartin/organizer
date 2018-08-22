@@ -129,10 +129,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
 
+        // Unmark the checkmark
+        final ImageView checkMark = taskViewHolder.itemView.findViewById(R.id.check_mark);
+        int[] states = {};
+        checkMark.setImageState(states, false);
+
         // On clicking the check mark, delete the task
         taskViewHolder.itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Mark the checkmark
+                int[] states = {android.R.attr.state_checked};
+                ImageView checkMark = (ImageView)v;
+                checkMark.setImageState(states, true);
                 // Complete the task
                 final int index = taskList.indexOf(task);
                 taskList.remove(index);
