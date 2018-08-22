@@ -25,4 +25,8 @@
         <item>Media</item>
         <item>Baja</item>
     </string-array>
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+    <string name="nav_header_desc">Cabecera de navegación</string>
+    <string name="action_settings">Ajustes</string>
 </resources>
