@@ -67,7 +67,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
 
-        public void setTaskPriority(long priority, int[] priorityValues, String[] priorityStrings, String[] priorityColors) {
+        public void setTaskPriority(long priority, int[] priorityValues, String[] priorityStrings, int[] priorityColors) {
             TextView textView = this.itemView.findViewById(R.id.task_priority);
             if (priority != 0) {
                 int priorityIndex = 0;
@@ -77,7 +77,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
                 textView.setText(priorityStrings[priorityIndex]);
-                textView.setTextColor(Color.parseColor(priorityColors[priorityIndex]));
+                textView.setTextColor(priorityColors[priorityIndex]);
             } else {
                 textView.setText("");
             }
@@ -119,7 +119,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         taskViewHolder.setTaskPriority(task.getPriority(),
                 resources.getIntArray(R.array.priority_values),
                 resources.getStringArray(R.array.priorities),
-                resources.getStringArray(R.array.priority_colors));
+                resources.getIntArray(R.array.priority_colors));
 
         // On clicking the list item, open an activity with the task details
         itemView.setOnClickListener(new View.OnClickListener() {

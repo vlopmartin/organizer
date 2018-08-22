@@ -10,10 +10,10 @@
         <item>0</item>
         <item>1</item>
     </array>
-    <string-array name="priority_colors">
+    <array name="priority_colors">
         <item>#000000</item>
         <item>#ff5050</item>
         <item>#f0f050</item>
         <item>#50ff50</item>
-    </string-array>
+    </array>
 </resources>
