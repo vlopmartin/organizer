@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.List;
+import java.util.Timer;
 
 public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -28,6 +30,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Resources resources;
 
     private DateTimeFormatter dateFormat;
+    protected int delay = 1000;
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -107,6 +110,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         TaskViewHolder taskViewHolder = (TaskViewHolder)holder;
+        final View itemView = holder.itemView;
         final Task task = taskList.get(position);
         taskViewHolder.setTaskName(task.getName());
         taskViewHolder.setTaskDescription(task.getDescription());
@@ -119,7 +123,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 resources.getStringArray(R.array.priority_colors));
 
         // On clicking the list item, open an activity with the task details
-        taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
@@ -130,43 +134,55 @@ public class TaskListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         });
 
         // Unmark the checkmark
-        final ImageView checkMark = taskViewHolder.itemView.findViewById(R.id.check_mark);
+        final ImageView checkMark = itemView.findViewById(R.id.check_mark);
         int[] states = {};
         checkMark.setImageState(states, false);
 
         // On clicking the check mark, delete the task
-        taskViewHolder.itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
+        itemView.findViewById(R.id.check_mark).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 // Mark the checkmark
                 int[] states = {android.R.attr.state_checked};
                 ImageView checkMark = (ImageView)v;
                 checkMark.setImageState(states, true);
-                // Complete the task
-                final int index = taskList.indexOf(task);
-                taskList.remove(index);
-                final Task newTask = task.complete(v.getContext());
-                TaskListAdapter.this.notifyItemRemoved(index);
-                // If the task got repeated, insert the new task
-                final int newIndex = taskList.size();
-                if (newTask != null) {
-                    taskList.add(newIndex, newTask);
-                    TaskListAdapter.this.notifyItemInserted(newIndex);
-                }
-                Snackbar.make(v, R.string.task_completed, Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
+                // Remove the listener
+                v.setOnClickListener(null);
+                itemView.setOnClickListener(null);
+                // Execute delayed
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
-                    public void onClick(View v) {
-                        // Remove the new task, if it was created
+                    public void run() {
+
+                        // Complete the task
+                        final int index = taskList.indexOf(task);
+                        taskList.remove(index);
+                        final Task newTask = task.complete(v.getContext());
+                        TaskListAdapter.this.notifyItemRemoved(index);
+                        // If the task got repeated, insert the new task
+                        final int newIndex = taskList.size();
                         if (newTask != null) {
-                            newTask.delete(v.getContext());
-                            taskList.remove(newIndex);
-                            TaskListAdapter.this.notifyItemRemoved(newIndex);
+                            taskList.add(newIndex, newTask);
+                            TaskListAdapter.this.notifyItemInserted(newIndex);
                         }
-                        taskList.add(index, task);
-                        task.save(v.getContext());
-                        TaskListAdapter.this.notifyItemInserted(index);
+                        Snackbar.make(v, R.string.task_completed, Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Remove the new task, if it was created
+                                if (newTask != null) {
+                                    newTask.delete(v.getContext());
+                                    taskList.remove(newIndex);
+                                    TaskListAdapter.this.notifyItemRemoved(newIndex);
+                                }
+                                taskList.add(index, task);
+                                task.save(v.getContext());
+                                TaskListAdapter.this.notifyItemInserted(index);
+                            }
+                        }).show();
+
                     }
-                }).show();
+                }, delay);
             }
         });
     }
