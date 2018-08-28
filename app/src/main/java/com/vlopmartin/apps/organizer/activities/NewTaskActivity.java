@@ -17,6 +17,7 @@ import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 
@@ -96,7 +97,7 @@ public class NewTaskActivity extends AppCompatActivity {
             );
         }
 
-        return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod);
+        return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod, null);
     }
 
     public void showDueDatePicker(View v) {

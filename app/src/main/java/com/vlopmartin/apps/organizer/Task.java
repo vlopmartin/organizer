@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
 import org.threeten.bp.Period;
 import org.threeten.bp.temporal.ChronoField;
 
@@ -23,7 +24,8 @@ public class Task {
             "DESCRIPTION TEXT, " +
             "DUE_DATE INTEGER, " +
             "PRIORITY INTEGER, " +
-            "REPEAT_PERIOD TEXT)";
+            "REPEAT_PERIOD TEXT, " +
+            "NOTIFICATION_TIME INTEGER)";
 
     private long id;
     public long getId() {
@@ -63,17 +65,22 @@ public class Task {
     public Period getRepeatPeriod() { return repeatPeriod; }
     public void setRepeatPeriod(Period repeatPeriod) { this.repeatPeriod = repeatPeriod; }
 
-    public Task(long id, String name, String description, LocalDate dueDate, int priority, Period repeatPeriod) {
+    private LocalTime notificationTime;
+    public LocalTime getNotificationTime() { return notificationTime; }
+    public void setNotificationTime(LocalTime notificationTime) { this.notificationTime = notificationTime; }
+
+    public Task(long id, String name, String description, LocalDate dueDate, int priority, Period repeatPeriod, LocalTime notificationTime) {
         setId(id);
         setName(name);
         setDescription(description);
         setDueDate(dueDate);
         setPriority(priority);
         setRepeatPeriod(repeatPeriod);
+        setNotificationTime(notificationTime);
     }
 
     public Task copy() {
-        return new Task(0, this.getName(), this.getDescription(), this.getDueDate(), this.getPriority(), this.getRepeatPeriod());
+        return new Task(0, this.getName(), this.getDescription(), this.getDueDate(), this.getPriority(), this.getRepeatPeriod(), this.getNotificationTime());
     }
 
 
@@ -89,6 +96,7 @@ public class Task {
         values.put("DUE_DATE", this.dueDate == null ? 0 : this.dueDate.getLong(ChronoField.EPOCH_DAY));
         values.put("PRIORITY", this.priority);
         values.put("REPEAT_PERIOD", this.repeatPeriod == null ? "" : this.repeatPeriod.toString());
+        values.put("NOTIFICATION_TIME", this.notificationTime == null ? 0 : this.notificationTime.getLong(ChronoField.SECOND_OF_DAY));
 
         long id = db.replace("TASKS", null, values);
         this.id = id;
@@ -127,13 +135,15 @@ public class Task {
         long taskDueDate = cursor.getLong(cursor.getColumnIndex("DUE_DATE"));
         int taskPriority = cursor.getInt(cursor.getColumnIndex("PRIORITY"));
         String taskRepeatPeriod = cursor.getString(cursor.getColumnIndex("REPEAT_PERIOD"));
+        long taskNotificationTime = cursor.getLong(cursor.getColumnIndex("NOTIFICATION_TIME"));
         return new Task(
                 taskId,
                 taskName,
                 taskDescription,
                 taskDueDate == 0 ? null : LocalDate.ofEpochDay(taskDueDate),
                 taskPriority,
-                taskRepeatPeriod.equals("") ? null : Period.parse(taskRepeatPeriod));
+                taskRepeatPeriod.equals("") ? null : Period.parse(taskRepeatPeriod),
+                taskNotificationTime == 0 ? null : LocalTime.ofSecondOfDay(taskNotificationTime));
     }
 
     public static Task getById(Context ctx, long id) {
