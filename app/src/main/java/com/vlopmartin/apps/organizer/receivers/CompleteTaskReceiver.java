@@ -24,8 +24,9 @@ public class CompleteTaskReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         long taskId = intent.getLongExtra(TASK_ID, 0);
         Task task = Task.getById(context, taskId);
-        task.complete(context);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.cancel((int)taskId);
+        if (task != null) {
+            task.complete(context);
+        }
+        NotificationManagerCompat.from(context).cancel((int) taskId);
     }
 }
