@@ -15,4 +15,4 @@ This is a personal project, so it is made for my personal needs, but everyone is
 
 ## Download
 
-You can download the APK [here](https://github.com/vlopmartin/organizer/releases/tag/v1.0).
+You can download the APK [here](https://github.com/vlopmartin/organizer/releases).
