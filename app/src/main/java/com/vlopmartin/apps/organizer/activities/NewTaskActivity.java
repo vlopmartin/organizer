@@ -2,6 +2,7 @@ package com.vlopmartin.apps.organizer.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
@@ -21,11 +23,14 @@ import org.threeten.bp.LocalTime;
 import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import java.util.Date;
+
 public class NewTaskActivity extends AppCompatActivity {
 
     public static final int DUE_DATE_REQUEST = 1;
 
     protected DateTimeFormatter dateFormat;
+    protected DateTimeFormatter timeFormat;
 
     protected EditText taskNameView;
     protected EditText taskDescriptionView;
@@ -38,8 +43,12 @@ public class NewTaskActivity extends AppCompatActivity {
     protected EditText repeatYearsView;
     protected ImageButton addRepeatButton;
     protected ImageButton clearRepeatButton;
+    protected View repeatLayout;
+    protected View notificationLayout;
+    protected EditText notificationView;
 
     protected LocalDate dueDate;
+    protected LocalTime notificationTime;
     protected boolean repeat = false;
 
     @Override
@@ -62,9 +71,13 @@ public class NewTaskActivity extends AppCompatActivity {
         repeatYearsView = findViewById(R.id.repeat_period_years);
         addRepeatButton = findViewById(R.id.add_repeat_button);
         clearRepeatButton = findViewById(R.id.clear_repeat_button);
+        repeatLayout = findViewById(R.id.repeat_layout);
+        notificationLayout = findViewById(R.id.notification_layout);
+        notificationView = findViewById(R.id.notification_view);
 
 
         dateFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_date_format));
+        timeFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_time_format));
 
         saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +110,7 @@ public class NewTaskActivity extends AppCompatActivity {
             );
         }
 
-        return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod, null);
+        return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod, notificationTime);
     }
 
     public void showDueDatePicker(View v) {
@@ -108,6 +121,17 @@ public class NewTaskActivity extends AppCompatActivity {
             intent.putExtra(DatePickerActivity.YEAR, dueDate.getYear());
         }
         startActivityForResult(intent, DUE_DATE_REQUEST);
+    }
+
+    public void showTimePicker(View v) {
+        TimePickerDialog timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                notificationTime = LocalTime.of(hourOfDay, minute);
+                notificationView.setText(notificationTime.format(timeFormat));
+            }
+        }, 12, 0, true);
+        timePicker.show();
     }
 
     public void onAddRepeat(View v) {
@@ -133,8 +157,19 @@ public class NewTaskActivity extends AppCompatActivity {
                 int year = data.getIntExtra(DatePickerActivity.YEAR, 0);
                 dueDate = LocalDate.of(year, month, day);
                 dueDateView.setText(dueDate.format(dateFormat));
+                setDateSpecificVisibility(View.VISIBLE);
+            }
+            else if (resultCode == DatePickerActivity.RESULT_CLEAR) {
+                dueDate = null;
+                dueDateView.setText("");
+                setDateSpecificVisibility(View.GONE);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void setDateSpecificVisibility(int visibility) {
+        repeatLayout.setVisibility(visibility);
+        notificationLayout.setVisibility(visibility);
     }
 }

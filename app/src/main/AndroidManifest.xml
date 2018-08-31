@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".AlarmReceiver" android:enabled="true"/>
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
@@ -38,7 +39,7 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.vlopmartin.apps.organizer.activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.DatePickerActivity"></activity>
+        <activity android:name=".activities.DatePickerActivity" />
     </application>
 
 </manifest>

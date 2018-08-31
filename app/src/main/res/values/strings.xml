@@ -20,6 +20,7 @@
     <string name="add_button_description">Add a new task</string>
     <string name="list_date_format">dd MMM</string>
     <string name="details_date_format">dd MMM yyyy</string>
+    <string name="details_time_format">hh:mm</string>
     <string name="repeat_period_hint">Repeat every:</string>
     <string name="repeat_days" >days</string>
     <string name="repeat_months">months</string>
@@ -30,4 +31,8 @@
         <item>Medium</item>
         <item>Low</item>
     </string-array>
+    <string name="notification_channel_id" translatable="false">com.vlopmartin.organizer.notifications</string>
+    <string name="notification_channel_name" translatable="false">OrganizerNotifications</string>
+    <string name="notification_channel_description" translatable="false">Notifications for Organizer</string>
+    <string name="task_notification_hint">Reminder time</string>
 </resources>

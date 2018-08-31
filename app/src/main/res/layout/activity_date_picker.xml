@@ -23,12 +23,24 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:onClick="onSave"
         android:text="@string/save_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_picker" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onDelete"
+        android:text="@string/delete_button"
+        app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintTop_toBottomOf="@+id/date_picker" />
 
 </android.support.constraint.ConstraintLayout>

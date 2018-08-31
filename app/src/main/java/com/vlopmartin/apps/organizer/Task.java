@@ -18,15 +18,6 @@ import java.util.List;
 
 public class Task {
 
-    public static final String createTableSQL = "CREATE TABLE TASKS (" +
-            "ID INTEGER PRIMARY KEY, " +
-            "NAME TEXT, " +
-            "DESCRIPTION TEXT, " +
-            "DUE_DATE INTEGER, " +
-            "PRIORITY INTEGER, " +
-            "REPEAT_PERIOD TEXT, " +
-            "NOTIFICATION_TIME INTEGER)";
-
     private long id;
     public long getId() {
         return id;
@@ -69,6 +60,10 @@ public class Task {
     public LocalTime getNotificationTime() { return notificationTime; }
     public void setNotificationTime(LocalTime notificationTime) { this.notificationTime = notificationTime; }
 
+    private boolean notified;
+    public boolean isNotified() { return notified; }
+    public void setNotified(boolean notified) { this.notified = notified; }
+
     public Task(long id, String name, String description, LocalDate dueDate, int priority, Period repeatPeriod, LocalTime notificationTime) {
         setId(id);
         setName(name);
@@ -77,6 +72,7 @@ public class Task {
         setPriority(priority);
         setRepeatPeriod(repeatPeriod);
         setNotificationTime(notificationTime);
+        setNotified(false);
     }
 
     public Task copy() {
@@ -97,6 +93,7 @@ public class Task {
         values.put("PRIORITY", this.priority);
         values.put("REPEAT_PERIOD", this.repeatPeriod == null ? "" : this.repeatPeriod.toString());
         values.put("NOTIFICATION_TIME", this.notificationTime == null ? 0 : this.notificationTime.getLong(ChronoField.SECOND_OF_DAY));
+        values.put("NOTIFIED", this.notified ? 1 : 0);
 
         long id = db.replace("TASKS", null, values);
         this.id = id;
@@ -136,7 +133,8 @@ public class Task {
         int taskPriority = cursor.getInt(cursor.getColumnIndex("PRIORITY"));
         String taskRepeatPeriod = cursor.getString(cursor.getColumnIndex("REPEAT_PERIOD"));
         long taskNotificationTime = cursor.getLong(cursor.getColumnIndex("NOTIFICATION_TIME"));
-        return new Task(
+        int taskNotified = cursor.getInt(cursor.getColumnIndex("NOTIFIED"));
+        Task task = new Task(
                 taskId,
                 taskName,
                 taskDescription,
@@ -144,6 +142,8 @@ public class Task {
                 taskPriority,
                 taskRepeatPeriod.equals("") ? null : Period.parse(taskRepeatPeriod),
                 taskNotificationTime == 0 ? null : LocalTime.ofSecondOfDay(taskNotificationTime));
+        task.setNotified(taskNotified == 1);
+        return task;
     }
 
     public static Task getById(Context ctx, long id) {

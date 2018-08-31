@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="complete_delay">1000</integer>
+    <integer name="checking_interval">10000</integer>
 </resources>

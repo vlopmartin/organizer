@@ -30,6 +30,9 @@ public class TaskDetailsActivity extends NewTaskActivity {
         dueDate = task.getDueDate();
         if (dueDate != null) {
             dueDateView.setText(dueDate.format(dateFormat));
+            setDateSpecificVisibility(View.VISIBLE);
+        } else {
+            setDateSpecificVisibility(View.GONE);
         }
         int[] priorityValues = getResources().getIntArray(R.array.priority_values);
         int priorityIndex = 0;
@@ -46,6 +49,10 @@ public class TaskDetailsActivity extends NewTaskActivity {
             repeatDaysView.setText(String.valueOf(repeatPeriod.getDays()));
             repeatMonthsView.setText(String.valueOf(repeatPeriod.getMonths()));
             repeatYearsView.setText(String.valueOf(repeatPeriod.getYears()));
+        }
+        notificationTime = task.getNotificationTime();
+        if (notificationTime != null) {
+            notificationView.setText(notificationTime.format(timeFormat));
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {

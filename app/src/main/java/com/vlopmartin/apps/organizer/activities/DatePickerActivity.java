@@ -15,6 +15,8 @@ public class DatePickerActivity extends AppCompatActivity {
     public static final String MONTH = "com.vlopmartin.apps.organizer.month";
     public static final String YEAR = "com.vlopmartin.apps.organizer.year";
 
+    public static final int RESULT_CLEAR = 2;
+
     private DatePicker datePicker;
 
     @Override
@@ -36,6 +38,11 @@ public class DatePickerActivity extends AppCompatActivity {
         intent.putExtra(MONTH, datePicker.getMonth() + 1); // Months go from 0 to 11 here??
         intent.putExtra(YEAR, datePicker.getYear());
         setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    public void onDelete(View v) {
+        setResult(RESULT_CLEAR);
         finish();
     }
 }

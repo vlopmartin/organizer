@@ -15,6 +15,7 @@
     <string name="add_button_description">Añadir una tarea nueva</string>
     <string name="list_date_format">dd MMM</string>
     <string name="details_date_format">dd MMM yyyy</string>
+    <string name="details_time_format">hh:mm</string>
     <string name="repeat_period_hint">Repetir cada:</string>
     <string name="repeat_days">días</string>
     <string name="repeat_months">meses</string>
@@ -29,4 +30,5 @@
     <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
     <string name="nav_header_desc">Cabecera de navegación</string>
     <string name="action_settings">Ajustes</string>
+    <string name="task_notification_hint">Reminder time</string>
 </resources>

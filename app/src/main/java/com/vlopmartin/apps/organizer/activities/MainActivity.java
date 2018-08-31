@@ -1,35 +1,31 @@
 package com.vlopmartin.apps.organizer.activities;
 
-import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
+import com.vlopmartin.apps.organizer.AlarmReceiver;
+import com.vlopmartin.apps.organizer.DBHelper;
+import com.vlopmartin.apps.organizer.NotificationHelper;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
 import com.vlopmartin.apps.organizer.TaskListAdapter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
+        //implements NavigationView.OnNavigationItemSelectedListener
 
     public List<Task> taskList;
     public TaskListAdapter taskListAdapter;
@@ -45,12 +41,14 @@ public class MainActivity extends AppCompatActivity
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();*/
+        toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);*/
 
         // Custom code starts here
+
+        Resources resources = getResources();
 
         RecyclerView mainListView = findViewById(R.id.main_list);
         mainListView.setLayoutManager(new LinearLayoutManager(this));
@@ -58,14 +56,14 @@ public class MainActivity extends AppCompatActivity
         taskList = Task.getList(this.getApplicationContext());
         sortTaskList(taskList);
 
-        taskListAdapter = new TaskListAdapter(taskList, getResources());
+        taskListAdapter = new TaskListAdapter(taskList, resources);
         mainListView.setAdapter(taskListAdapter);
+
+        NotificationHelper.createNotificationChannel(getApplicationContext());
+        scheduleChecker();
     }
 
     protected void sortTaskList(List<Task> taskList) {
-        Calendar now = new GregorianCalendar();
-        Calendar dueDate = new GregorianCalendar();
-
         Collections.sort(taskList, new Task.PriorityComparator());
         Collections.sort(taskList, new Task.DateComparator());
         Collections.sort(taskList, new Task.CurrentComparator());
@@ -95,6 +93,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void scheduleChecker() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 10000, getResources().getInteger(R.integer.checking_interval), pendingIntent);
+    }
+
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -140,5 +145,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
+
 }
