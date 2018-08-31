@@ -14,8 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.vlopmartin.apps.organizer.AlarmReceiver;
-import com.vlopmartin.apps.organizer.DBHelper;
+import com.vlopmartin.apps.organizer.receivers.AlarmReceiver;
 import com.vlopmartin.apps.organizer.NotificationHelper;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;

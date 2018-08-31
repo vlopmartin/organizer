@@ -1,8 +1,12 @@
-package com.vlopmartin.apps.organizer;
+package com.vlopmartin.apps.organizer.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.vlopmartin.apps.organizer.NotificationHelper;
+import com.vlopmartin.apps.organizer.R;
+import com.vlopmartin.apps.organizer.Task;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalDateTime;

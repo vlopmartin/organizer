@@ -35,4 +35,5 @@
     <string name="notification_channel_name" translatable="false">OrganizerNotifications</string>
     <string name="notification_channel_description" translatable="false">Notifications for Organizer</string>
     <string name="task_notification_hint">Reminder time</string>
+    <string name="complete_button">Complete</string>
 </resources>
