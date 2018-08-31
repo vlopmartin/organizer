@@ -25,11 +25,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         for (Task task: taskList) {
             LocalDate dueDate = task.getDueDate();
             LocalTime notificationTime = task.getNotificationTime();
-            LocalDateTime dateTime = dueDate.atTime(notificationTime);
-            if (dateTime.isBefore(now) && !task.isNotified()) {
-                NotificationHelper.notify(context, task);
-                task.setNotified(true);
-                task.save(context);
+            if (dueDate != null && notificationTime != null) {
+                LocalDateTime dateTime = dueDate.atTime(notificationTime);
+                if (dateTime.isBefore(now) && !task.isNotified()) {
+                    NotificationHelper.notify(context, task);
+                    task.setNotified(true);
+                    task.save(context);
+                }
             }
         }
     }

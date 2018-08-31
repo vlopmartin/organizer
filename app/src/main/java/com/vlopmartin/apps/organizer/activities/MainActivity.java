@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 10000, getResources().getInteger(R.integer.checking_interval), pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, getResources().getInteger(R.integer.checking_interval), pendingIntent);
     }
 
     /*@Override

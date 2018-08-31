@@ -3,12 +3,14 @@ package com.vlopmartin.apps.organizer.activities;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -113,24 +115,48 @@ public class NewTaskActivity extends AppCompatActivity {
         return new Task(taskId, taskName, taskDescription, dueDate, taskPriority, taskPeriod, notificationTime);
     }
 
-    public void showDueDatePicker(View v) {
-        Intent intent = new Intent(this, DatePickerActivity.class);
-        if (dueDate != null) {
-            intent.putExtra(DatePickerActivity.DAY, dueDate.getDayOfMonth());
-            intent.putExtra(DatePickerActivity.MONTH, dueDate.getMonthValue());
-            intent.putExtra(DatePickerActivity.YEAR, dueDate.getYear());
-        }
-        startActivityForResult(intent, DUE_DATE_REQUEST);
+    public void showDueDatePicker(final View v) {
+        LocalDate initialDate = dueDate != null ? dueDate : LocalDate.now();
+        DatePickerDialog datePicker = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dueDate = LocalDate.of(year, month + 1, dayOfMonth);
+                dueDateView.setText(dueDate.format(dateFormat));
+                setDateSpecificVisibility(View.VISIBLE);
+            }
+        }, initialDate.getYear(), initialDate.getMonthValue() - 1, initialDate.getDayOfMonth());
+        datePicker.setButton(DatePickerDialog.BUTTON_NEUTRAL, getString(R.string.delete_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dueDate = null;
+                dueDateView.setText("");
+                notificationTime = null;
+                notificationView.setText("");
+                onClearRepeat(v);
+                dialog.cancel();
+                setDateSpecificVisibility(View.GONE);
+            }
+        });
+        datePicker.show();
     }
 
     public void showTimePicker(View v) {
+        LocalTime initialTime = notificationTime != null ? notificationTime : LocalTime.now();
         TimePickerDialog timePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 notificationTime = LocalTime.of(hourOfDay, minute);
                 notificationView.setText(notificationTime.format(timeFormat));
             }
-        }, 12, 0, true);
+        }, initialTime.getHour(), initialTime.getMinute(), false);
+        timePicker.setButton(TimePickerDialog.BUTTON_NEUTRAL, getString(R.string.delete_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                notificationTime = null;
+                notificationView.setText("");
+                dialog.cancel();
+            }
+        });
         timePicker.show();
     }
 
@@ -145,27 +171,10 @@ public class NewTaskActivity extends AppCompatActivity {
         addRepeatButton.setVisibility(View.VISIBLE);
         clearRepeatButton.setVisibility(View.GONE);
         repeatSelectionView.setVisibility(View.GONE);
+        repeatDaysView.setText("");
+        repeatMonthsView.setText("");
+        repeatYearsView.setText("");
         repeat = false;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DUE_DATE_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                int day = data.getIntExtra(DatePickerActivity.DAY, 0);
-                int month = data.getIntExtra(DatePickerActivity.MONTH, 0);
-                int year = data.getIntExtra(DatePickerActivity.YEAR, 0);
-                dueDate = LocalDate.of(year, month, day);
-                dueDateView.setText(dueDate.format(dateFormat));
-                setDateSpecificVisibility(View.VISIBLE);
-            }
-            else if (resultCode == DatePickerActivity.RESULT_CLEAR) {
-                dueDate = null;
-                dueDateView.setText("");
-                setDateSpecificVisibility(View.GONE);
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     protected void setDateSpecificVisibility(int visibility) {
