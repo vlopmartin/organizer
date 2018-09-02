@@ -101,6 +101,7 @@ public class Task {
         this.id = id;
 
         NotifyTaskReceiver.schedule(ctx);
+        db.close();
     }
 
     public void delete(Context ctx) {
@@ -109,6 +110,7 @@ public class Task {
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
 
         NotifyTaskReceiver.schedule(ctx);
+        db.close();
     }
 
     public Task repeat(Context ctx) {
@@ -165,6 +167,7 @@ public class Task {
         }
 
         cursor.close();
+        db.close();
         return ret;
     }
 
@@ -179,6 +182,7 @@ public class Task {
         }
 
         cursor.close();
+        db.close();
         return ret;
     }
 
@@ -195,6 +199,7 @@ public class Task {
         }
 
         cursor.close();
+        db.close();
         return ret;
     }
 
