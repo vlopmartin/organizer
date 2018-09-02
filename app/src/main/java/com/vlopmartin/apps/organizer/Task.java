@@ -7,6 +7,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vlopmartin.apps.organizer.receivers.NotifyTaskReceiver;
+
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.Period;
@@ -97,12 +99,16 @@ public class Task {
 
         long id = db.replace("TASKS", null, values);
         this.id = id;
+
+        NotifyTaskReceiver.schedule(ctx);
     }
 
     public void delete(Context ctx) {
         SQLiteDatabase db = new DBHelper(ctx).getWritableDatabase();
 
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
+
+        NotifyTaskReceiver.schedule(ctx);
     }
 
     public Task repeat(Context ctx) {
@@ -167,6 +173,22 @@ public class Task {
 
         SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
         Cursor cursor = db.query("TASKS", null, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            ret.add(readCursor(cursor));
+        }
+
+        cursor.close();
+        return ret;
+    }
+
+    public static List<Task> getListWithNotification(Context ctx) {
+        List<Task> ret = new ArrayList<Task>();
+
+        SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
+        String selection = "DUE_DATE IS NOT NULL AND DUE_DATE != ?" +
+                "AND NOTIFICATION_TIME IS NOT NULL AND NOTIFICATION_TIME != ?";
+        Cursor cursor = db.query("TASKS", null, selection, new String[] {"0", "0"}, null, null, null);
 
         while (cursor.moveToNext()) {
             ret.add(readCursor(cursor));

@@ -14,7 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.vlopmartin.apps.organizer.receivers.AlarmReceiver;
+import com.vlopmartin.apps.organizer.receivers.NotifyTaskReceiver;
 import com.vlopmartin.apps.organizer.NotificationHelper;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mainListView.setAdapter(taskListAdapter);
 
         NotificationHelper.createNotificationChannel(getApplicationContext());
-        scheduleChecker();
+        NotifyTaskReceiver.schedule(this);
     }
 
     protected void sortTaskList(List<Task> taskList) {
@@ -90,13 +90,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void scheduleChecker() {
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis() + 1000, getResources().getInteger(R.integer.checking_interval), pendingIntent);
     }
 
     /*@Override

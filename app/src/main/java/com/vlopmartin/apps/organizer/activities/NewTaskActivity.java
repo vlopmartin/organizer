@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
+import com.vlopmartin.apps.organizer.receivers.NotifyTaskReceiver;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
