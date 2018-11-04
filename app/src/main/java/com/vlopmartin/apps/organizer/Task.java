@@ -191,7 +191,8 @@ public class Task {
 
         SQLiteDatabase db = new DBHelper(ctx).getReadableDatabase();
         String selection = "DUE_DATE IS NOT NULL AND DUE_DATE != ?" +
-                "AND NOTIFICATION_TIME IS NOT NULL AND NOTIFICATION_TIME != ?";
+                "AND NOTIFICATION_TIME IS NOT NULL AND NOTIFICATION_TIME != ?" +
+                "AND NOTIFIED = 0";
         Cursor cursor = db.query("TASKS", null, selection, new String[] {"0", "0"}, null, null, null);
 
         while (cursor.moveToNext()) {

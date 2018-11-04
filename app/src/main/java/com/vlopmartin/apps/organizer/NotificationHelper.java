@@ -50,7 +50,7 @@ public abstract class NotificationHelper {
 
         Intent intent = new Intent(context, CompleteTaskReceiver.class);
         intent.putExtra(TaskDetailsActivity.TASK_ID, task.getId());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, CompleteTaskReceiver.REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)task.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_check_black_24dp, context.getString(R.string.complete_button), pendingIntent);
 
         int[] vibration_pattern_int = context.getResources().getIntArray(R.array.vibration_pattern);
