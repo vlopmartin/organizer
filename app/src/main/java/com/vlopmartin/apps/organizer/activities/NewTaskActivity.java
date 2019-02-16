@@ -25,6 +25,7 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.util.Date;
 
@@ -79,8 +80,10 @@ public class NewTaskActivity extends AppCompatActivity {
         notificationView = findViewById(R.id.notification_view);
 
 
-        dateFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_date_format));
-        timeFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_time_format));
+        //dateFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_date_format));
+        //timeFormat = DateTimeFormatter.ofPattern(getResources().getString(R.string.details_time_format));
+        dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+        timeFormat = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
         saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
