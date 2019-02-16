@@ -23,14 +23,11 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
 
     private final static String TAG = "NotifyTaskReceiver";
 
-    public static int REQUEST = 0;
-
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            List<Task> taskList = Task.getListWithNotification(context);
+            Task task = Task.getById(context, intent.getLongExtra(CompleteTaskReceiver.TASK_ID, 0));
             LocalDateTime now = LocalDateTime.now();
-            for (Task task: taskList) {
                 LocalDateTime dateTime = task.getDueDate().atTime(task.getNotificationTime());
                 if (dateTime.isBefore(now)) {
                     Log.d(TAG, "Notifying task: " + task.getName());
@@ -38,54 +35,9 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
                     task.setNotified(true);
                     task.save(context);
                 }
-            }
         } catch (Exception e) {
             Log.e(TAG, "Exception while notifying task: " + e.getMessage());
             Log.e(TAG, e.toString());
-        } finally {
-            schedule(context);
         }
-    }
-
-    public static void schedule(Context context) {
-        try {
-            List<Task> taskList = Task.getListWithNotification(context);
-            Intent intent = new Intent(context, NotifyTaskReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            // Get the nearest task with a date and a notification time
-            Task nearestTask = null;
-            for (Task task : taskList) {
-                if (nearestTask == null) nearestTask = task;
-                else {
-                    LocalDateTime taskDateTime = task.getDueDate().atTime(task.getNotificationTime());
-                    LocalDateTime nearestTaskDateTime = nearestTask.getDueDate().atTime(nearestTask.getNotificationTime());
-                    if (taskDateTime.isBefore(nearestTaskDateTime)) nearestTask = task;
-                }
-            }
-
-            // If we found a task that needs to be notified...
-            if (nearestTask != null) {
-                LocalDateTime dateTime = nearestTask.getDueDate().atTime(nearestTask.getNotificationTime());
-                LocalDateTime now = LocalDateTime.now();
-                if (dateTime.isBefore(now)) {
-                    try {
-                        Log.d(TAG, "Task is in the past, sending intent now");
-                        pendingIntent.send();
-                    } catch (PendingIntent.CanceledException e) {
-                        // This should never happen
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.d(TAG, "Scheduling task for: " + dateTime.toString());
-                    Duration in = Duration.between(now, dateTime);
-                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + in.toMillis(), pendingIntent);
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG,"Exception while scheduling task: " + e.getMessage());
-            Log.e(TAG,e.toString());
-        }
-
     }
 }

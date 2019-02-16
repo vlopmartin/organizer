@@ -6,8 +6,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 
 import com.vlopmartin.apps.organizer.receivers.NotifyTaskReceiver;
+import com.vlopmartin.apps.organizer.receivers.ScheduleTasksReceiver;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
@@ -100,7 +102,7 @@ public class Task {
         long id = db.replace("TASKS", null, values);
         this.id = id;
 
-        NotifyTaskReceiver.schedule(ctx);
+        ScheduleTasksReceiver.scheduleTasks(ctx);
         db.close();
     }
 
@@ -109,7 +111,7 @@ public class Task {
 
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
 
-        NotifyTaskReceiver.schedule(ctx);
+        ScheduleTasksReceiver.scheduleTasks(ctx);
         db.close();
     }
 

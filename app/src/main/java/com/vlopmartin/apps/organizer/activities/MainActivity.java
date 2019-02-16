@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         mainListView.setAdapter(taskListAdapter);
 
         NotificationHelper.createNotificationChannel(getApplicationContext());
-        NotifyTaskReceiver.schedule(this);
     }
 
     protected void sortTaskList(List<Task> taskList) {
