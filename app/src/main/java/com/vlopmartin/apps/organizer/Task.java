@@ -102,7 +102,7 @@ public class Task {
         long id = db.replace("TASKS", null, values);
         this.id = id;
 
-        ScheduleTasksReceiver.scheduleTasks(ctx);
+        ScheduleTasksReceiver.scheduleTask(this, ctx);
         db.close();
     }
 
@@ -111,7 +111,7 @@ public class Task {
 
         db.delete("TASKS", "ID = ?", new String[] {String.valueOf(this.id)});
 
-        ScheduleTasksReceiver.scheduleTasks(ctx);
+        ScheduleTasksReceiver.cancelTask(this, ctx);
         db.close();
     }
 

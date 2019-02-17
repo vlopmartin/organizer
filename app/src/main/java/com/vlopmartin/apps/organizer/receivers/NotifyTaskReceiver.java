@@ -27,14 +27,8 @@ public class NotifyTaskReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         try {
             Task task = Task.getById(context, intent.getLongExtra(CompleteTaskReceiver.TASK_ID, 0));
-            LocalDateTime now = LocalDateTime.now();
-                LocalDateTime dateTime = task.getDueDate().atTime(task.getNotificationTime());
-                if (dateTime.isBefore(now)) {
-                    Log.d(TAG, "Notifying task: " + task.getName());
-                    NotificationHelper.notify(context, task);
-                    task.setNotified(true);
-                    task.save(context);
-                }
+            Log.d(TAG, "Notifying task: " + task.getName());
+            NotificationHelper.notify(context, task);
         } catch (Exception e) {
             Log.e(TAG, "Exception while notifying task: " + e.getMessage());
             Log.e(TAG, e.toString());

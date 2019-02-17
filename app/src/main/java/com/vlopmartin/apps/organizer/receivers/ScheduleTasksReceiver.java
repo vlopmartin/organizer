@@ -28,31 +28,47 @@ public class ScheduleTasksReceiver extends BroadcastReceiver {
 
     public static void scheduleTasks(Context context) {
         List<Task> tasks = Task.getListWithNotification(context);
+        for (Task task : tasks) {
+            scheduleTask(task, context);
+        }
+    }
+
+    public static void scheduleTask(Task task, Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         LocalDateTime now = LocalDateTime.now();
-        for (Task task : tasks) {
-            Intent notifyIntent = new Intent(context, NotifyTaskReceiver.class);
-            notifyIntent.putExtra(CompleteTaskReceiver.TASK_ID, task.getId());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)task.getId(), notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = buildIntent(task, context);
 
-            LocalDateTime dateTime = task.getDueDate().atTime(task.getNotificationTime());
-            if (dateTime.isBefore(now)) {
-                try {
-                    Log.d(TAG, "Task is in the past, sending intent now");
-                    pendingIntent.send();
-                } catch (PendingIntent.CanceledException e) {
-                    Log.e(TAG, "The intent was cancelled!");
-                    e.printStackTrace();
-                }
+        LocalDateTime dateTime = task.getDueDate().atTime(task.getNotificationTime());
+        if (dateTime.isBefore(now)) {
+            try {
+                Log.d(TAG, "Task is in the past, sending intent now");
+                pendingIntent.send();
+            } catch (PendingIntent.CanceledException e) {
+                Log.e(TAG, "The intent was cancelled!");
+                e.printStackTrace();
+            }
+        } else {
+            Log.d(TAG, "Scheduling task for: " + dateTime.toString());
+            Duration in = Duration.between(now, dateTime);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + in.toMillis(), pendingIntent);
             } else {
-                Log.d(TAG, "Scheduling task for: " + dateTime.toString());
-                Duration in = Duration.between(now, dateTime);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + in.toMillis(), pendingIntent);
-                } else {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + in.toMillis(), pendingIntent);
-                }
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + in.toMillis(), pendingIntent);
             }
         }
+    }
+
+    public static void cancelTask(Task task, Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = buildIntent(task, context);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private static PendingIntent buildIntent(Task task, Context context) {
+        Intent notifyIntent = new Intent(context, NotifyTaskReceiver.class);
+        notifyIntent.putExtra(CompleteTaskReceiver.TASK_ID, task.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)task.getId(), notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return pendingIntent;
     }
 }
