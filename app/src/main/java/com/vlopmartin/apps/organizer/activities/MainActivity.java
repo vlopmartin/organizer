@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.vlopmartin.apps.organizer.TaskCompletionObservable;
 import com.vlopmartin.apps.organizer.receivers.NotifyTaskReceiver;
 import com.vlopmartin.apps.organizer.NotificationHelper;
 import com.vlopmartin.apps.organizer.R;
@@ -22,8 +23,10 @@ import com.vlopmartin.apps.organizer.TaskListAdapter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer {
         //implements NavigationView.OnNavigationItemSelectedListener
 
     public List<Task> taskList;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         taskListAdapter = new TaskListAdapter(taskList, resources);
         mainListView.setAdapter(taskListAdapter);
 
+        TaskCompletionObservable.getInstance().addObserver(this);
         NotificationHelper.createNotificationChannel(getApplicationContext());
     }
 
@@ -75,10 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        taskList = Task.getList(this.getApplicationContext());
-        sortTaskList(taskList);
-        taskListAdapter.setTaskList(taskList);
-        taskListAdapter.notifyDataSetChanged();
+        refreshTaskList();
     }
 
     @Override
@@ -89,6 +90,20 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof TaskCompletionObservable) {
+            refreshTaskList();
+        }
+    }
+
+    public void refreshTaskList() {
+        taskList = Task.getList(this.getApplicationContext());
+        sortTaskList(taskList);
+        taskListAdapter.setTaskList(taskList);
+        taskListAdapter.notifyDataSetChanged();
     }
 
     /*@Override

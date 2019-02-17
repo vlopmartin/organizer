@@ -9,6 +9,7 @@ import android.util.Log;
 import com.vlopmartin.apps.organizer.NotificationHelper;
 import com.vlopmartin.apps.organizer.R;
 import com.vlopmartin.apps.organizer.Task;
+import com.vlopmartin.apps.organizer.TaskCompletionObservable;
 import com.vlopmartin.apps.organizer.activities.MainActivity;
 
 import org.threeten.bp.LocalDate;
@@ -30,6 +31,7 @@ public class CompleteTaskReceiver extends BroadcastReceiver {
         if (task != null) {
             Log.d(TAG, "Completing task: " + task.getName());
             task.complete(context);
+            TaskCompletionObservable.getInstance().completeTask(taskId);
         } else {
             Log.d(TAG, "Could not find task with ID " + String.valueOf(taskId));
         }
